@@ -86,6 +86,7 @@ GitHub PAT 只用于代码仓库访问，不能当作模型密钥。适配器固
 - [架构、数据模型与 Codex 集成](docs/ARCHITECTURE.md)
 - [开发与商业验证路线图](docs/ROADMAP.md)
 - [开源来源、许可和修改记录](docs/UPSTREAM.md)
+- Web UI 重构：[视觉与文案规范](docs/ui/VISUAL_GUIDELINES.md) · [前端构建规范](docs/ui/FRONTEND_STANDARDS.md) · [开发 Agent 手册](docs/ui/AGENT_PLAYBOOK.md)
 
 ## 开源致谢
 

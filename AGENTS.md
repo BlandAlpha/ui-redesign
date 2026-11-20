@@ -22,3 +22,9 @@ disclose that and use available search and primary sources.
 - Use Node.js 22+. Run appropriate tests, npm run lint, npm run typecheck and npm run build for application changes.
 - Critical behavior belongs in tests: consent/expiry, citation validity, optimistic writes and derived-record invalidation.
 - Test model adapters with fake runtimes unless the user supplies and authorizes live service usage.
+
+## Web UI
+
+- Before editing a Web page, component, style, or interface copy, read the [frontend agent playbook](docs/ui/AGENT_PLAYBOOK.md) and the relevant sections of the [visual guidelines](docs/ui/VISUAL_GUIDELINES.md) and [frontend standards](docs/ui/FRONTEND_STANDARDS.md).
+- Reuse the shared shadcn/Base UI components and Lucide icons. Apply the shared visual rules and keep evidence source, confirmation, and AI permission legible as separate facts.
+- For the redesign, work on `ui-redesign` and follow the playbook’s migration order and verification steps. The existing TRACEFOLIO logo is the current asset.
