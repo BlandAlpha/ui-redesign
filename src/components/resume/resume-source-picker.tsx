@@ -1,11 +1,14 @@
 "use client";
 
-import type { DragEvent, KeyboardEvent } from "react";
+// Modified for TRACEFOLIO (2026): source tabs and compact resume selection.
+
+import { Tabs } from "@base-ui/react/tabs";
+import type { DragEvent } from "react";
 import { useRef } from "react";
-import { Check, FileText, LoaderCircle, Upload } from "lucide-react";
+import { FileText, LoaderCircle, Pencil, Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
 import { RESUME_UPLOAD_ACCEPT, type UploadedResumeDraft } from "@/lib/resume-upload";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +20,6 @@ export type ResumePickerOption = {
 
 export function ResumeSourcePicker({
   title,
-  description,
   source,
   selectedId,
   options,
@@ -32,7 +34,6 @@ export function ResumeSourcePicker({
   className,
 }: {
   title?: string;
-  description: string;
   source: "library" | "upload";
   selectedId?: string;
   options: ResumePickerOption[];
@@ -62,13 +63,7 @@ export function ResumeSourcePicker({
     openFileDialog();
   }
 
-  function handleUploadKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    requestUpload();
-  }
-
-  function handleDrop(event: DragEvent<HTMLDivElement>) {
+  function handleDrop(event: DragEvent<HTMLButtonElement>) {
     event.preventDefault();
     if (isUploading) return;
     const file = event.dataTransfer.files?.[0];
@@ -76,107 +71,83 @@ export function ResumeSourcePicker({
   }
 
   return (
-    <section className={cn("flex min-h-0 flex-col overflow-hidden p-5 lg:p-6", className)}>
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <h2 className="font-serif text-xl font-semibold">{title ?? t("title")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-        </div>
-        <FileText className="size-5 text-primary" />
-      </div>
-
-      <ToggleGroup
-        value={[source]}
-        onValueChange={(value) => {
-          const next = value[0];
+    <section className={cn("min-h-0 min-w-0 p-4 sm:p-6", className)}>
+      <h2 className="mb-3 text-ui-section font-semibold">{title ?? t("title")}</h2>
+      <Tabs.Root
+        value={source}
+        onValueChange={(next) => {
           if (next === "library" || next === "upload") onSourceChange(next);
         }}
-        variant="outline"
-        spacing={0}
-        className="mb-4 grid w-full grid-cols-2 bg-surface-low p-1"
       >
-        <ToggleGroupItem value="library" className="w-full">{t("library")}</ToggleGroupItem>
-        <ToggleGroupItem value="upload" className="w-full">{t("upload")}</ToggleGroupItem>
-      </ToggleGroup>
-
-      {source === "library" ? (
-        options.length ? (
-          <ToggleGroup
-            value={selectedId ? [selectedId] : []}
-            onValueChange={(value) => {
-              if (value[0]) onSelect(value[0]);
-            }}
-            orientation="vertical"
-            variant="outline"
-            className="resume-library-scroll min-h-0 flex-1 w-full items-stretch overflow-y-scroll pr-2 [scrollbar-gutter:stable]"
-          >
-            {options.map((option) => (
-              <ToggleGroupItem
-                key={option.id}
-                value={option.id}
-                onDoubleClick={() => onOpenResume?.(option.id)}
-                className="h-auto min-h-20 w-full justify-between px-4 py-3 text-left whitespace-normal"
+        <Tabs.List aria-label={t("title")} className="mb-4 inline-flex max-w-full flex-wrap gap-1 rounded-xl bg-surface-low p-1">
+          {(["library", "upload"] as const).map((key) => {
+            const Icon = key === "library" ? FileText : Upload;
+            return (
+              <Tabs.Tab
+                key={key}
+                value={key}
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-lg px-3 text-ui-meta font-medium text-muted-foreground transition-colors duration-150 hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring data-active:bg-primary data-active:text-primary-foreground motion-reduce:transition-none"
               >
-                <span className="min-w-0">
-                  <span className="block text-sm font-semibold">{option.name}</span>
-                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">{option.detail}</span>
-                  {onOpenResume ? <span className="mt-1 block text-[0.6875rem] text-muted-foreground">{t("doubleClickEdit")}</span> : null}
-                </span>
-                {selectedId === option.id ? <Check className="shrink-0" /> : null}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        ) : (
-          <div className="grid min-h-80 place-items-center rounded-lg border border-dashed border-line px-4 text-center text-sm leading-6 text-muted-foreground">
-            {t("empty")}
-          </div>
-        )
-      ) : (
-        <div className="flex flex-1 flex-col gap-3">
-          <div
-            role="button"
-            tabIndex={isUploading ? -1 : 0}
-            aria-disabled={isUploading}
+                <Icon aria-hidden className="size-4 shrink-0" />
+                {t(key)}
+              </Tabs.Tab>
+            );
+          })}
+        </Tabs.List>
+
+        <Tabs.Panel value="library">
+          {options.length ? (
+            <fieldset aria-label={t("title")} className="resume-library-scroll min-w-0 divide-y divide-line overflow-y-auto xl:max-h-[540px]">
+              {options.map((option) => (
+                <div key={option.id} className={cn("flex min-w-0 items-center gap-1 rounded-lg pr-1", selectedId === option.id && "bg-brand-muted")}>
+                  <label className="flex min-h-[64px] min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-lg px-3 py-2 hover:bg-brand-muted/50 has-focus-visible:outline-2 has-focus-visible:-outline-offset-2 has-focus-visible:outline-ring">
+                    <input type="radio" name="resume-source-record" checked={selectedId === option.id} onChange={() => onSelect(option.id)} className="size-4 shrink-0 accent-primary" />
+                    <span className="min-w-0">
+                      <span className="block truncate text-ui-body font-semibold" title={option.name}>{option.name}</span>
+                      <span className="block truncate text-ui-meta text-muted-foreground" title={option.detail}>{option.detail}</span>
+                    </span>
+                  </label>
+                  {onOpenResume ? (
+                    <Button type="button" size="icon" variant="ghost" aria-label={t("editResume", { name: option.name })} title={t("editResume", { name: option.name })} onClick={() => onOpenResume(option.id)}>
+                      <Pencil aria-hidden />
+                    </Button>
+                  ) : null}
+                </div>
+              ))}
+            </fieldset>
+          ) : <p className="rounded-lg bg-surface-low p-4 text-ui-meta text-muted-foreground">{t("empty")}</p>}
+        </Tabs.Panel>
+
+        <Tabs.Panel value="upload">
+          <input
+            ref={uploadInputRef}
+            type="file"
+            className="hidden"
+            disabled={isUploading}
+            accept={RESUME_UPLOAD_ACCEPT}
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0];
+              if (file && !isUploading) onUploadFile(file);
+              event.currentTarget.value = "";
+            }}
+          />
+          <button
+            type="button"
+            disabled={isUploading}
             onDrop={handleDrop}
             onDragOver={(event) => event.preventDefault()}
             onClick={requestUpload}
-            onKeyDown={handleUploadKeyDown}
-            className={cn(
-              "flex min-h-80 flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-line bg-surface-low px-5 py-8 text-center transition hover:border-primary/60 hover:bg-primary-soft/40",
-              isUploading && "cursor-wait opacity-80",
-            )}
+            className="flex min-h-36 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-surface-low p-4 text-center transition-colors duration-150 hover:border-primary hover:bg-primary-soft/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-wait disabled:opacity-80"
           >
-            <input
-              ref={uploadInputRef}
-              type="file"
-              className="hidden"
-              disabled={isUploading}
-              accept={RESUME_UPLOAD_ACCEPT}
-              onClick={(event) => event.stopPropagation()}
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file && !isUploading) onUploadFile(file);
-                event.currentTarget.value = "";
-              }}
-            />
-            <span className="grid size-12 place-items-center rounded-lg bg-background text-primary shadow-sm">
-              {isUploading ? <LoaderCircle className="size-5 animate-spin" /> : <Upload className="size-5" />}
-            </span>
-            <span className="mt-4 text-sm font-semibold text-foreground">{isUploading ? t("parsing") : t("import")}</span>
-            <span className="mt-1 text-sm text-muted-foreground">{isUploading ? t("waiting") : t("drag")}</span>
-            <span className="mt-3 text-xs text-muted-foreground">{t("supported")}</span>
-            {uploadedResume ? (
-              <span className="mt-4 max-w-full truncate rounded-md bg-background px-3 py-2 text-xs text-primary shadow-sm">
-                {t("selected", { fileName: uploadedResume.fileName, count: uploadedResume.characterCount })}
-              </span>
-            ) : null}
-            {uploadError ? <span className="mt-3 text-xs text-destructive">{uploadError}</span> : null}
-          </div>
-          <div className="rounded-lg border border-line bg-background px-4 py-3 text-xs leading-5 text-muted-foreground">
-            {t("snapshotOnly")}
-          </div>
-        </div>
-      )}
+            {isUploading ? <LoaderCircle aria-hidden className="size-5 animate-spin text-brand motion-reduce:animate-none" /> : <Upload aria-hidden className="size-5 text-brand" />}
+            <span className="text-ui-body font-semibold">{isUploading ? t("parsing") : t("import")}</span>
+            <span className="text-ui-meta text-muted-foreground">{t("supported")}</span>
+          </button>
+          {uploadedResume ? <p role="status" className="mt-3 break-words text-ui-meta text-brand">{t("selected", { fileName: uploadedResume.fileName, count: uploadedResume.characterCount })}</p> : null}
+          {uploadError ? <p role="alert" className="mt-3 text-ui-meta text-destructive">{uploadError}</p> : null}
+          <p className="mt-2 text-ui-meta text-muted-foreground">{t("snapshotOnly")}</p>
+        </Tabs.Panel>
+      </Tabs.Root>
     </section>
   );
 }

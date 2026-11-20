@@ -105,7 +105,6 @@ function CampusCatalog({ initialQuery }: { initialQuery: CampusQuery }) {
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
         </div>
-        <p className="text-sm leading-6 text-muted-foreground">{t("subtitle")}</p>
         {!loading && !failed && initialQuery.recordId && !data?.selectedRecord && selection === undefined ? <p role="status" className="text-sm text-muted-foreground">{t("recordNotFound")}</p> : null}
       </header>
 
@@ -152,7 +151,7 @@ function CampusCatalog({ initialQuery }: { initialQuery: CampusQuery }) {
           </Select>
         </div>
         {loading ? <div className="flex min-h-64 items-center justify-center gap-2 text-sm text-muted-foreground"><LoaderCircle aria-hidden className="size-5 animate-spin motion-reduce:animate-none" />{t("loading")}</div> : failed ? <div className="rounded-2xl border border-dashed p-12 text-center">
-          <p className="mb-4 text-sm text-muted-foreground">{t("loadFailedHint")}</p><Button variant="outline" onClick={() => setRetry((value) => value + 1)}>{t("retry")}</Button>
+          <Button variant="outline" onClick={() => setRetry((value) => value + 1)}>{t("retry")}</Button>
         </div> : empty ? <div className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed p-8 text-center">
           <Building2 aria-hidden className="mb-4 size-8 text-muted-foreground/60" /><h2 className="font-medium">{data?.source ? t("noResults") : t("noDataset")}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{data?.source ? t("noResultsHint") : t("noDatasetHint")}</p>

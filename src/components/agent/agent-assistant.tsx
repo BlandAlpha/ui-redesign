@@ -649,8 +649,7 @@ function AgentConversation({
                 <FileText className="size-4" />
                 {t("welcome.title")}
               </div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("welcome.description")}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
+                            <div className="mt-3 flex flex-wrap gap-2">
                 {[t("welcome.prompt1"), t("welcome.prompt2"), t("welcome.prompt3")].map((prompt) => (
                   <button
                     key={prompt}
@@ -816,7 +815,6 @@ function AgentConversation({
             <Button size="icon" aria-label={t("send")} disabled={!input.trim()} onClick={submit}><ArrowUp /></Button>
           )}
         </div>
-        <p className="mt-2 text-center text-[11px] text-muted-foreground">{t("approvalHint")}</p>
       </div>
     </>
   );

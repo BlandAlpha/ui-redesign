@@ -129,7 +129,6 @@ export function ResumeDiagnosisDialog({
             <div>
               <Sparkles className="mx-auto size-7 animate-pulse text-primary" />
               <p className="mt-3 font-medium">{t("analyzing")}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{t("analyzingHint")}</p>
             </div>
           </div>
         ) : diagnosis ? (
@@ -156,7 +155,6 @@ export function ResumeDiagnosisDialog({
               <div className="flex items-end justify-between gap-4">
                 <div>
                   <h3 className="text-sm font-semibold">{t("issuesTitle")}</h3>
-                  <p className="mt-1 text-xs text-muted-foreground">{t("issuesHint")}</p>
                 </div>
                 <span className="shrink-0 text-xs text-muted-foreground">
                   {t("selectedCount", { count: selectedCount })}
@@ -222,7 +220,7 @@ export function ResumeDiagnosisDialog({
               ) : (
                 <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
               )}
-              <span>{status || t("startHint")}</span>
+              <span role="status">{status}</span>
             </div>
           </div>
         )}

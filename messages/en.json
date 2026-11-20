@@ -2,13 +2,30 @@
   "app": {
     "brandName": "TRACEFOLIO",
     "careerWorkspace": {
-      "overview": "Evidence map",
+      "overview": "Overview",
       "memory": "Career notes",
       "evidence": "Capability evidence",
       "growth": "Growth plan",
-      "openEvidence": "Organize project materials",
+      "openEvidence": "Add evidence",
       "export": "Export career records",
-      "loading": "Loading career records…"
+      "loading": "Loading career records…",
+      "map": "Evidence map",
+      "nextStep": "Next step",
+      "firstEvidence": "Record your first piece of evidence",
+      "reviewEvidence": "Review evidence",
+      "compareRole": "Compare a target role",
+      "recentEvidence": "Recent evidence",
+      "viewEvidence": "View all",
+      "evidenceCount": "{count, plural, one {# evidence record} other {# evidence records}}",
+      "memoryCount": "{count, plural, one {# career note} other {# career notes}}",
+      "growthCount": "{count, plural, one {# open growth task} other {# open growth tasks}}",
+      "inspectAiMaterials": "View records available to AI",
+      "noAiMaterials": "No records are available to AI.",
+      "evidenceStatus": {
+        "accepted": "Confirmed by you",
+        "pending": "Needs review",
+        "rejected": "Excluded"
+      }
     },
     "language": {
       "label": "Language",
@@ -40,7 +57,6 @@
         "company_asc": "Company name: A–Z"
       },
       "title": "Campus recruitment",
-      "subtitle": "Find companies and explore recruitment opportunities.",
       "catalogCount": "{count, number} listings",
       "searchPlaceholder": "Search companies, roles or majors; separate keywords with spaces",
       "clearSearch": "Clear search",
@@ -80,7 +96,6 @@
       },
       "loading": "Loading recruitment listings…",
       "loadFailed": "Recruitment listings are unavailable",
-      "loadFailedHint": "We couldn't read the recruitment data. Please try again.",
       "retry": "Reload",
       "resultCount": "Found {count, number} listings",
       "sortUpdated": "Latest source updates first",
@@ -111,10 +126,6 @@
     "navGroups": {
       "workflow": "Career Flow",
       "system": "System"
-    },
-    "sidebar": {
-      "localMode": "Local mode",
-      "encrypted": "Local credentials · Your career memory"
     },
     "topbar": {
       "notifications": "Follow-up reminders",
@@ -152,18 +163,11 @@
       "openPipeline": "View application tracking",
       "followUpsDue": "Due follow-ups",
       "resumeVersions": "Resume versions",
-      "mode": "Mode: local single user",
       "provider": "Provider: {provider}",
       "backDashboard": "Back to dashboard"
     },
     "pages": {
-      "resumeOptimizationTitle": "AI Resume Optimization",
-      "resumeOptimizationSubtitle": "Improve clarity, density, and result presentation based on the current resume, then keep editing the generated version.",
-      "matchSubtitle": "Reframe resume emphasis around the target JD, strengthen evidence from real experience, and generate an editable tailored version.",
-      "pipelineSubtitle": "Track sources, stages, interview rounds, and follow-up dates so every application stays manageable from submission to offer.",
-      "interviewSubtitle": "Generate mock questions from the selected resume and target role, practice answer by answer, and receive structured review notes.",
-      "defaultSubtitle": "A career workspace from resume to offer",
-      "intelligenceSubtitle": "Build a career record grounded in your goals and real work."
+      "resumeOptimizationTitle": "AI Resume Optimization"
     },
     "dashboard": {
       "metrics": {
@@ -210,7 +214,6 @@
     },
     "resumeLibrary": {
       "title": "My Resumes",
-      "count": "{count} resumes · {jobOptimizedCount} job-optimized versions · {generalOptimizedCount} general-optimized versions",
       "importing": "Parsing...",
       "import": "Import resume",
       "create": "New resume",
@@ -303,15 +306,13 @@
     "title": "Select resume",
     "library": "Resume library",
     "upload": "Upload file",
-    "doubleClickEdit": "Double-click to edit",
+    "editResume": "Edit {name}",
     "empty": "No resumes yet. Create and save one in the resume editor first.",
     "parsing": "Parsing resume...",
     "import": "Import resume",
-    "waiting": "This may take a while. Keep the page open.",
-    "drag": "Drag or click to upload",
     "supported": "Supports PDF / DOC / DOCX / images / TXT / MD / JSON",
     "selected": "Selected {fileName} · {count} chars",
-    "snapshotOnly": "The file is used only as a resume snapshot for this action and will not overwrite your library."
+    "snapshotOnly": "Used for this task only."
   },
   "jdPreparation": {
     "uploadJd": "Upload JD",
@@ -363,26 +364,18 @@
       "back": "Back to JD",
       "track": "Add to application tracking"
     },
-    "resumePickerDescription": "Choose the base resume · {count} total",
     "form": {
-      "title": "Paste target JD",
-      "description": "Paste the complete company name, full role title, responsibilities, requirements, and nice-to-haves. TRACEFOLIO will extract priorities from the selected resume and generate a matched version.",
-      "jdLabel": "Company / Role / Description / Requirements / Nice-to-haves *",
-      "jdPlaceholder": "Paste the complete JD, including the company name, full role title, responsibilities, requirements, nice-to-haves, and business context...",
-      "settingsTitle": "Optimization settings",
-      "settingsDescription": "Choose the rewrite focus. All edits stay within the facts already present in the original resume."
+      "title": "Target role",
+      "jdLabel": "Job description (required)",
+      "jdPlaceholder": "Paste the company, role and requirements",
+      "settingsTitle": "Optimization settings"
     },
     "preferences": {
       "impact": "Emphasize outcomes",
-      "impactDescription": "Prioritize responsibilities and result evidence",
-      "quantify": "Add quantified wording",
-      "quantifyDescription": "Rewrite existing results without inventing numbers",
-      "ats": "ATS friendly",
-      "atsDescription": "Improve keywords and formatting for screening",
-      "skills": "Highlight matched skills",
-      "skillsDescription": "Surface skills aligned with the JD first"
+      "quantify": "Quantify existing results",
+      "ats": "Use ATS-friendly formatting",
+      "skills": "Highlight matched skills"
     },
-    "currentBase": "Current base: {name}",
     "edit": "Edit",
     "generatingButton": "Generating...",
     "startButton": "Start JD matching",
@@ -435,14 +428,10 @@
       "hr": "HR round"
     },
     "setup": {
-      "resumePickerDescription": "Choose the resume for this round · {count} total",
-      "title": "Paste target JD",
-      "description": "Paste the complete company name, full role title, responsibilities, requirements, and skills. TRACEFOLIO will generate an interview prep guide or mock questions from the selected resume.",
-      "jdLabel": "Company / Role / Description / Requirements / Nice-to-haves *",
-      "jdPlaceholder": "Paste the complete JD, including the company name, full role title, responsibilities, requirements, nice-to-haves, and business context...",
+      "title": "Target role",
+      "jdLabel": "Job description (required)",
+      "jdPlaceholder": "Paste the company, role and requirements",
       "settingsTitle": "Interview settings",
-      "settingsDescription": "Choose the focus for this round. Questions stay fixed after generation.",
-      "hint": "AI will generate this round of questions from the selected resume and JD.",
       "needResume": "Select a resume that contains usable content.",
       "needJd": "Enter the job description first.",
       "generating": "Generating questions",
@@ -493,7 +482,6 @@
       "planTitle": "Preparation plan",
       "introductionTitle": "Tailored self-introduction",
       "reverseQuestionsTitle": "Questions to ask",
-      "footerHint": "You can generate the mock questions next. Evaluation points remain hidden during practice.",
       "back": "Adjust material",
       "start": "Generate and start",
       "export": {
@@ -816,7 +804,6 @@
     },
     "exportDialog": {
       "title": "Export resume",
-      "description": "Choose a format and download the current resume.",
       "close": "Close export dialog",
       "exporting": "Exporting...",
       "cancel": "Cancel",
@@ -839,13 +826,10 @@
       "title": "AI resume analysis",
       "description": "Analyze the current resume first, then choose which issues to address and how. Analysis never changes the original resume.",
       "analyzing": "Analyzing resume...",
-      "analyzingHint": "Checking action and results, factual evidence, clarity, and structure without a mechanical STAR score.",
-      "startHint": "Analysis only reads the sanitized current resume and never changes or overwrites it.",
       "analysisDone": "Resume analysis complete.",
       "analysisFailed": "Resume analysis failed. Try again later.",
       "summary": "Analysis overview",
       "issuesTitle": "Analysis findings",
-      "issuesHint": "Issues AI can safely rewrite are selected by default. Missing facts must be supplied, while contradictions such as an impossible GPA or conflicting date must be verified.",
       "selectedCount": "{count} selected",
       "noIssues": "No clear high-priority issues were found. Close this dialog to keep using the original resume.",
       "severity": {
@@ -1242,51 +1226,50 @@
     "celebrationAnnouncement": "Your job-search journey starts now. Here’s to landing an offer you truly want!",
     "steps": {
       "welcome": {
-        "title": "New to TRACEFOLIO?\nStart with the tutorial",
-        "description": "TRACEFOLIO guides you from a base resume through job matching, interview preparation, and application tracking to receiving an offer."
+        "title": "Workspace guide",
+        "description": "Choose a workspace to explore."
       },
       "dashboard": {
         "title": "The dashboard is your job-search overview",
-        "description": "Applications, upcoming actions, interviews, and offers appear here. An empty dashboard is normal at first and fills in as you use the workflow."
+        "description": "See applications and interviews that need attention."
       },
       "settings": {
         "title": "Connect an AI provider first",
-        "description": "Choose a provider in Settings, enter your API key, save it, and test the connection. Your key is encrypted on this device and is never written into the project code."
+        "description": "Configure and test a model before using AI features."
       },
       "agent": {
         "title": "Tell the TRACEFOLIO Agent what you want to do",
-        "description": "Open TRACEFOLIO Agent from the lower-right corner to search jobs, applications, and privacy-filtered resumes, then select parameters and confirm resumes, tailored versions, interview guides, mock interviews, template changes, or application-card updates. It remains experimental and never deletes career data."
+        "description": "Open the Agent from the bottom-right corner. It asks before saving changes."
       },
       "resume": {
         "title": "Prepare a base resume",
-        "description": "Import an existing resume or create one from scratch. Your original stays intact, while AI review and job matching create separate versions instead of overwriting it."
+        "description": "Create or import a resume."
       },
       "campus": {
         "title": "Explore campus recruitment opportunities",
-        "description": "Filter listings by company, role keywords, graduation year, and location. Open the details for requirements and application links, and confirm information with the recruiter's official announcement. This page is empty if no recruitment dataset is configured."
+        "description": "Search by company, role or location."
       },
       "match": {
         "title": "Tailor it to a specific JD",
-        "description": "Choose a resume and paste the full job description. TRACEFOLIO creates a tailored version, preserves the before-and-after content, and starts a job archive."
+        "description": "Choose a resume and paste a job description to create a tailored version."
       },
       "interview": {
         "title": "Prepare for the same role",
-        "description": "Generate a structured preparation guide, practice with mock questions, and review the AI feedback. A tailored resume links these outcomes to its job first."
+        "description": "Choose a role and resume to create prep materials or start practice."
       },
       "pipeline": {
         "title": "Track your application progress",
-        "description": "Move roles through ready, applied, assessment, interview, and offer stages. Add dates and follow-ups so the dashboard can surface what needs attention."
+        "description": "Record the current stage and next follow-up date."
       },
       "library": {
         "title": "Find every outcome in the career library",
-        "description": "Browse complete job archives or view resumes, original JDs, and interview materials by type. You no longer need to search through each feature for past work."
+        "description": "Find saved results by role or category."
       }
     }
   },
   "careerLibrary": {
     "title": "Career Library",
     "sampleJob": "Sample job",
-    "summary": "{jobs} job files · {artifacts} generated outcomes",
     "groups": {
       "job": "By job",
       "type": "By type"
@@ -1300,7 +1283,6 @@
     "emptyDescription": "Generated outcomes from JD matching, resume optimization, and interview preparation will appear here.",
     "emptySearch": "No outcomes match this search.",
     "count": "{count} items",
-    "jobCount": "{count} roles",
     "categoryCount": "{count} items",
     "updatedAt": "Updated {date}",
     "delete": "Delete outcome",
@@ -1323,7 +1305,6 @@
     "editJob": {
       "action": "Edit job name",
       "title": "Edit job archive name",
-      "description": "Linked resumes and interview materials will stay in this archive and be regrouped under the updated company name.",
       "company": "Company",
       "role": "Role",
       "save": "Save changes",
@@ -1404,7 +1385,6 @@
       "reverseQuestions": "Questions to ask",
       "perLine": " (one item per line)"
     },
-    "generalResumeSubtitle": "General resume optimization not linked to a specific role",
     "categories": {
       "resume": "Resume outcomes",
       "analysis": "Job analysis",
@@ -1423,13 +1403,6 @@
       "job-analysis": "Original JD",
       "interview-preparation": "Preparation guide",
       "interview-session": "Mock and review"
-    },
-    "kindDescriptions": {
-      "general-resume": "General resume diagnosis, optimization, and changes.",
-      "tailored-resume": "A resume tailored to a target job description.",
-      "job-analysis": "The original job description used for JD matching.",
-      "interview-preparation": "Structured preparation for a target role.",
-      "interview-session": "Mock interview questions, answers, and AI review."
     },
     "metrics": {
       "jobAnalysis": "Original JD {count}",
@@ -1468,7 +1441,6 @@
     "questionOutline": "Question outline",
     "overviewSummary": "{count} job materials · Updated {date}",
     "overviewPathTitle": "Job preparation path",
-    "overviewPathDescription": "Move from the job description to tailored resumes and interview materials.",
     "overviewPath": {
       "analysis": "Review the original JD and role requirements",
       "resume": "Open resumes tailored for this role",
@@ -1476,9 +1448,7 @@
       "empty": "No materials yet"
     },
     "overviewCompositionTitle": "Material composition",
-    "overviewCompositionDescription": "A factual breakdown of job analysis, tailored resumes, and interview materials in this file.",
     "jobFilesTitle": "Generated outcomes in this job file",
-    "jobFilesDescription": "Sorted by recent activity. Open any item to view the full content.",
     "emptyCategories": {
       "analysis": "No job analysis yet. It will appear here after JD matching.",
       "resume": "No job-tailored resume yet.",
@@ -1563,9 +1533,6 @@
     },
     "unknown": "Unknown",
     "notRecorded": "This was not recorded in the historical outcome.",
-    "issuesDescription": "Only issues saved with this outcome are shown.",
-    "beforeAfterDescription": "Compare the actual content before and after optimization.",
-    "originalResumeDescription": "The actual base resume used to generate this version.",
     "before": "Before",
     "after": "After",
     "optimizationSummary": "Optimization summary",
@@ -1603,7 +1570,6 @@
     "inputPlaceholder": "Describe what you want to handle in your job search…",
     "send": "Send",
     "stop": "Stop generating",
-    "approvalHint": "You will review every business-data write before it runs",
     "setup": {
       "title": "Configure an AI service first",
       "description": "The Agent uses TRACEFOLIO's existing provider and model settings. It does not require a separate Agent key.",

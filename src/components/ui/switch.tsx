@@ -1,5 +1,7 @@
 "use client"
 
+// Modified for TRACEFOLIO (2026): equal thumb insets for both switch sizes.
+
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 
 import { cn } from "@/lib/utils"
@@ -16,14 +18,14 @@ function Switch({
       data-slot="switch"
       data-size={size}
       className={cn(
-        "peer group/switch relative inline-flex shrink-0 items-center rounded-full border border-transparent transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px] dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 data-disabled:cursor-not-allowed data-disabled:opacity-50",
+        "peer group/switch relative inline-flex h-(--switch-height) w-(--switch-width) shrink-0 items-center rounded-full bg-input p-[2px] transition-colors duration-150 [--switch-height:20px] [--switch-width:36px] after:absolute after:inset-[-12px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-invalid:outline-2 aria-invalid:outline-destructive data-[size=sm]:[--switch-height:16px] data-[size=sm]:[--switch-width:28px] data-checked:bg-primary data-disabled:cursor-not-allowed data-disabled:opacity-50 motion-reduce:transition-none",
         className
       )}
       {...props}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
-        className="pointer-events-none block rounded-full bg-background ring-0 transition-transform group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] dark:data-checked:bg-primary-foreground group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0 dark:data-unchecked:bg-foreground"
+        className="pointer-events-none block size-[calc(var(--switch-height)-4px)] shrink-0 rounded-full bg-white transition-transform duration-150 group-data-checked/switch:translate-x-[calc(var(--switch-width)-var(--switch-height))] dark:group-data-checked/switch:bg-primary-foreground motion-reduce:transition-none rtl:group-data-checked/switch:-translate-x-[calc(var(--switch-width)-var(--switch-height))]"
       />
     </SwitchPrimitive.Root>
   )

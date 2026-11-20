@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -50,10 +49,9 @@ export function ResumeExportDialog({
                 <Download className="h-5 w-5 text-emerald-600" />
                 {t("title")}
               </DialogTitle>
-              <DialogDescription className="mt-2">{t("description")}</DialogDescription>
             </div>
-            <DialogClose render={<Button variant="ghost" size="icon" title={t("close")} />}>
-              <X />
+            <DialogClose render={<Button variant="ghost" size="icon" aria-label={t("close")} />}>
+              <X aria-hidden />
             </DialogClose>
           </div>
         </DialogHeader>

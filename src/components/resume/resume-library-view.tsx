@@ -1,12 +1,14 @@
 "use client";
 
-// Modified for TRACEFOLIO (2026): resume library typography and paper-toned surfaces.
+// Modified for TRACEFOLIO (2026): aligned resume record cards.
 
 import type { RefObject } from "react";
-import { ArrowDownUp, Copy, LayoutGrid, List, Plus, Search, Trash2, Upload } from "lucide-react";
+import { ArrowDownUp, Copy, FileText, LayoutGrid, List, Plus, Search, Trash2, Upload } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { RecordCard, RecordCardAction } from "@/components/ui/record-card";
 import type { ResumeLibraryCard, ResumeLibrarySortMode } from "@/lib/resume-library";
 import { RESUME_UPLOAD_ACCEPT } from "@/lib/resume-upload";
 import { cn } from "@/lib/utils";
@@ -53,8 +55,6 @@ export function ResumeLibraryView({
   copyingCardId?: string;
 }) {
   const t = useTranslations("app.resumeLibrary");
-  const jobOptimizedCount = cards.filter((card) => card.optimizationKind === "job").length;
-  const generalOptimizedCount = cards.filter((card) => card.optimizationKind === "general").length;
 
   return (
     <section className="text-foreground">
@@ -62,9 +62,6 @@ export function ResumeLibraryView({
         <header className="flex flex-col gap-5 border-b border-line pb-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t("count", { count: cards.length, jobOptimizedCount, generalOptimizedCount })}
-            </p>
             {status !== savedStatus && <p className="mt-3 text-xs text-muted-foreground">{status}</p>}
           </div>
 
@@ -153,7 +150,6 @@ export function ResumeLibraryView({
             <ResumeCard
               key={card.id}
               card={card}
-              viewMode={viewMode}
               onOpen={() => onOpenCard(card)}
               onCopy={() => onCopyCard(card)}
               onDelete={() => onDeleteCard(card)}
@@ -174,14 +170,12 @@ export function ResumeLibraryView({
 
 function ResumeCard({
   card,
-  viewMode,
   onOpen,
   onCopy,
   onDelete,
   copyDisabled,
 }: {
   card: ResumeLibraryCard;
-  viewMode: ResumeLibraryViewMode;
   onOpen: () => void;
   onCopy: () => void;
   onDelete: () => void;
@@ -199,91 +193,23 @@ function ResumeCard({
     : t(`updatedAt.${card.updatedAtKind}`);
 
   return (
-    <article
-      role="button"
-      tabIndex={0}
-      onClick={onOpen}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onOpen();
-        }
-      }}
-      className={cn(
-        "group cursor-pointer overflow-hidden rounded-xl border border-line bg-surface text-left transition hover:border-primary/35 hover:shadow-[0_14px_44px_rgba(49,48,48,0.08)] focus:outline-none focus:ring-2 focus:ring-primary/20",
-        viewMode === "list" && "flex items-center",
+    <RecordCard
+      title={card.title}
+      onOpen={onOpen}
+      context={<><FileText aria-hidden className="size-4 shrink-0 text-brand" /><span className="truncate">{kindLabel}</span></>}
+      detail={card.detail}
+      metadata={(
+        <>
+          <Badge variant="secondary">{t(`templates.${card.templateKey}`)}</Badge>
+          <span className="min-w-0 truncate tabular-nums" title={updatedAtLabel}>{updatedAtLabel}</span>
+        </>
       )}
-    >
-      <div
-        className={cn(
-          "grid place-items-center bg-surface-low",
-          viewMode === "grid" ? "h-44 border-b border-line" : "h-32 w-44 shrink-0 border-r border-line",
-        )}
-      >
-        <ResumeMiniPreview template={card.template} />
-      </div>
-      <div className="min-w-0 flex-1 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="truncate text-ui-label font-semibold">{card.title}</h2>
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{card.detail}</p>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="rounded-full bg-surface-mid px-2 py-1 text-[0.6875rem] text-muted-foreground">
-              {kindLabel}
-            </span>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                onCopy();
-              }}
-              disabled={copyDisabled}
-              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-primary-soft hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label={t("copy")}
-              title={t("copy")}
-            >
-              <Copy className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                onDelete();
-              }}
-              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
-              aria-label={card.id === "main" ? t("deleteOriginal") : t("deleteResume")}
-              title={card.id === "main" ? t("deleteOriginal") : t("deleteResume")}
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-        <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="rounded-md bg-primary-soft px-2 py-1 text-primary">{t(`templates.${card.templateKey}`)}</span>
-          <span>{updatedAtLabel}</span>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function ResumeMiniPreview({ template }: { template: string }) {
-  const isModern = template === "现代";
-  return (
-    <div className="h-36 w-24 overflow-hidden rounded-lg border border-line bg-white shadow-sm">
-      <div className={cn("h-12 px-3 py-2", isModern ? "bg-[#172554]" : "bg-white")}>
-        <div className={cn("h-2 w-14 rounded-full", isModern ? "bg-white/80" : "bg-zinc-700")} />
-        <div className={cn("mt-2 h-1.5 w-10 rounded-full", isModern ? "bg-white/50" : "bg-zinc-300")} />
-      </div>
-      <div className="space-y-2 px-3 py-3">
-        <div className="h-1.5 w-14 rounded-full bg-[#315f92]" />
-        <div className="h-1 w-16 rounded-full bg-zinc-200" />
-        <div className="h-1 w-12 rounded-full bg-zinc-200" />
-        <div className="mt-3 h-1.5 w-10 rounded-full bg-[#315f92]" />
-        <div className="h-1 w-16 rounded-full bg-zinc-200" />
-        <div className="h-1 w-11 rounded-full bg-zinc-200" />
-      </div>
-    </div>
+      actions={(
+        <>
+          <RecordCardAction label={t("copy")} onClick={onCopy} disabled={copyDisabled}><Copy aria-hidden /></RecordCardAction>
+          <RecordCardAction label={t(card.id === "main" ? "deleteOriginal" : "deleteResume")} onClick={onDelete} destructive><Trash2 aria-hidden /></RecordCardAction>
+        </>
+      )}
+    />
   );
 }

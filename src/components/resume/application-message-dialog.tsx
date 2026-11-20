@@ -142,7 +142,6 @@ export function ApplicationMessageDialog({
         <div className="space-y-2">
           <div className="flex items-baseline justify-between gap-3">
             <Label htmlFor="application-message-context">{t("extraLabel")}</Label>
-            <span className="text-xs text-muted-foreground">{t("extraHint")}</span>
           </div>
           <Textarea
             id="application-message-context"
@@ -158,7 +157,6 @@ export function ApplicationMessageDialog({
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor="application-message-result">{t("resultLabel")}</Label>
-              <span className="text-xs text-muted-foreground">{t("editableHint")}</span>
             </div>
             <Textarea
               id="application-message-result"

@@ -2,6 +2,7 @@
 
 // Modified for TRACEFOLIO (2026): shared preparation form typography and surfaces.
 
+import { useId, useRef } from "react";
 import type { ComponentProps, ComponentType, ReactNode } from "react";
 import { Settings, Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -9,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { ResumeSourcePicker } from "@/components/resume/resume-source-picker";
 import { SpeechTextarea } from "@/components/shared/speech-textarea";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -27,13 +29,11 @@ export const RESUME_IMPORT_AI_SETUP_MESSAGE =
 export function ResumeJdPreparation({
   resumePicker,
   title,
-  description,
   jdLabel,
   jdValue,
   onJdChange,
   jdPlaceholder,
   settingsTitle,
-  settingsDescription,
   settings,
   footer,
   notice,
@@ -41,19 +41,18 @@ export function ResumeJdPreparation({
 }: {
   resumePicker: ResumePickerProps;
   title: string;
-  description: string;
   jdLabel: string;
   jdValue: string;
   onJdChange: (value: string) => void;
   jdPlaceholder: string;
   settingsTitle: string;
-  settingsDescription: string;
   settings: ReactNode;
   footer: ReactNode;
   notice?: ReactNode;
   onJdImportStatus?: (message: string) => void;
 }) {
   const t = useTranslations("jdPreparation");
+  const jdFileInput = useRef<HTMLInputElement>(null);
 
   async function importJdFile(file?: File) {
     if (!file) return;
@@ -75,29 +74,27 @@ export function ResumeJdPreparation({
       <div className="grid xl:grid-cols-[320px_minmax(0,1fr)]">
         <ResumeSourcePicker
           {...resumePicker}
-          className="border-b border-line lg:border-b-0 xl:h-[760px] xl:self-start xl:border-r"
+          className="border-b border-line xl:border-r xl:border-b-0"
         />
 
         <section className="flex min-w-0 flex-col">
-          <div className="shrink-0 p-5 lg:p-6">
+          <div className="shrink-0 px-4 pt-4 sm:px-6 sm:pt-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div>
-                <h2 className="text-ui-section font-semibold">{title}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-              </div>
-              <label className="inline-flex cursor-pointer items-center gap-2 self-start rounded-lg border border-line bg-surface px-3 py-2 text-xs font-medium text-foreground hover:bg-surface-low">
-                <Upload className="h-4 w-4" />
+              <h2 className="text-ui-section font-semibold">{title}</h2>
+              <Button type="button" variant="outline" className="self-start" onClick={() => jdFileInput.current?.click()}>
+                <Upload aria-hidden />
                 {t("uploadJd")}
-                <input
-                  type="file"
-                  className="hidden"
-                  accept=".txt,.md,text/plain,text/markdown"
-                  onChange={(event) => {
-                    void importJdFile(event.currentTarget.files?.[0]);
-                    event.currentTarget.value = "";
-                  }}
-                />
-              </label>
+              </Button>
+              <input
+                ref={jdFileInput}
+                type="file"
+                className="hidden"
+                accept=".txt,.md,text/plain,text/markdown"
+                onChange={(event) => {
+                  void importJdFile(event.currentTarget.files?.[0]);
+                  event.currentTarget.value = "";
+                }}
+              />
             </div>
           </div>
 
@@ -113,13 +110,12 @@ export function ResumeJdPreparation({
                 wrapperClassName="mt-2"
                 className="resume-library-scroll h-[210px] min-h-[210px] field-sizing-fixed resize-y overflow-y-auto bg-surface-low px-4 py-4 text-sm leading-7"
               />
-              <span className="mt-1 block text-right text-xs text-muted-foreground">{jdValue.length} / 8000</span>
+              {jdValue.length >= 7600 ? <span className="mt-1 block text-right text-ui-meta text-muted-foreground">{jdValue.length} / 8000</span> : null}
             </label>
 
             <div className="-mx-5 px-5 pt-6 lg:-mx-6 lg:px-6">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-foreground">{settingsTitle}</h3>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{settingsDescription}</p>
               </div>
               {settings}
             </div>
@@ -193,32 +189,47 @@ export function PreparationOptionCard({
   label,
   description,
   onChange,
+  radio,
 }: {
   checked: boolean;
-  icon: ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
   label: string;
-  description: string;
+  description?: string;
   onChange: () => void;
+  radio?: { name: string; value: string };
 }) {
+  const id = useId();
+  const labelId = `${id}-label`;
+  const descriptionId = description ? `${id}-description` : undefined;
+
   return (
-    <button
-      type="button"
-      onClick={onChange}
+    <label
+      htmlFor={id}
       className={cn(
-        "flex min-h-24 w-full items-center justify-between gap-4 rounded-lg border px-4 py-4 text-left transition",
-        checked ? "border-primary/30 bg-primary-soft/35" : "border-line bg-surface hover:bg-surface-low",
+        "grid min-h-[72px] w-full min-w-0 cursor-pointer grid-cols-[16px_minmax(0,1fr)_36px] items-center gap-3 rounded-xl border p-3 text-left transition-colors duration-150 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring motion-reduce:transition-none",
+        checked ? "border-primary/40 bg-primary-soft/50" : "border-line bg-surface hover:bg-surface-low",
       )}
     >
-      <span className="flex min-w-0 items-center gap-3">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-surface-low text-primary"><Icon className="h-4 w-4" /></span>
-        <span className="min-w-0">
-          <span className="block text-[0.8125rem] leading-5 font-semibold text-foreground">{label}</span>
-          <span className="mt-1 block text-[0.75rem] leading-5 text-muted-foreground">{description}</span>
-        </span>
+      <Icon aria-hidden className="size-4 text-brand" />
+      <span className="min-w-0">
+        <span id={labelId} className="block text-ui-body font-semibold [overflow-wrap:anywhere]">{label}</span>
+        {description ? <span id={descriptionId} className="block text-ui-meta text-muted-foreground">{description}</span> : null}
       </span>
-      <span className={cn("relative h-5 w-9 shrink-0 rounded-full transition", checked ? "bg-primary" : "bg-surface-mid")} aria-hidden>
-        <span className={cn("absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition", checked ? "left-4" : "left-0.5")} />
-      </span>
-    </button>
+      {radio ? (
+        <input
+          id={id}
+          type="radio"
+          name={radio.name}
+          value={radio.value}
+          checked={checked}
+          onChange={onChange}
+          aria-labelledby={labelId}
+          aria-describedby={descriptionId}
+          className="size-[18px] justify-self-end accent-primary"
+        />
+      ) : (
+        <Switch id={id} checked={checked} onCheckedChange={onChange} aria-labelledby={labelId} aria-describedby={descriptionId} />
+      )}
+    </label>
   );
 }

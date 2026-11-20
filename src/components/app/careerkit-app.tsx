@@ -71,7 +71,6 @@ import {
   type CareerLibraryGroup,
   type CareerLibraryTarget,
 } from "@/lib/career-library";
-import { hasSeenFirstUseTour, markFirstUseTourSeen } from "@/lib/first-use-tour";
 import { installSaveCloseGuard } from "@/lib/save-close-guard";
 import { useResumeStore } from "@/stores/resume-store";
 
@@ -224,25 +223,7 @@ export function CareerKitApp({
       .slice(0, 4);
   }, [applications, jobById]);
 
-  useEffect(() => {
-    try {
-      if (hasSeenFirstUseTour(window.localStorage)) return;
-      const timeout = window.setTimeout(() => setFirstUseTourOpen(true), 450);
-      return () => window.clearTimeout(timeout);
-    } catch {
-      const timeout = window.setTimeout(() => setFirstUseTourOpen(true), 450);
-      return () => window.clearTimeout(timeout);
-    }
-  }, []);
-
-  const finishFirstUseTour = useCallback((outcome: "completed" | "skipped") => {
-    try {
-      markFirstUseTourSeen(window.localStorage, outcome);
-    } catch {
-      // The guide remains usable when browser storage is unavailable.
-    }
-    setFirstUseTourOpen(false);
-  }, []);
+  const finishFirstUseTour = useCallback(() => setFirstUseTourOpen(false), []);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -504,19 +485,6 @@ export function CareerKitApp({
     : active === "match"
       ? t("nav.match")
       : t(`nav.${navItems.find((item) => item.key === active)?.labelKey ?? "dashboard"}`);
-  const pageSubtitle =
-    active === "intelligence"
-      ? t("pages.intelligenceSubtitle")
-      : isResumeOptimizationResult
-      ? t("pages.resumeOptimizationSubtitle")
-      : active === "match"
-      ? t("pages.matchSubtitle")
-      : active === "pipeline"
-        ? t("pages.pipelineSubtitle")
-        : active === "interview"
-          ? t("pages.interviewSubtitle")
-          : t("pages.defaultSubtitle");
-
   async function saveResume(contentOverride?: ResumeContent, target: ResumeSaveTarget = { kind: "main" }, name?: string) {
     const nextContent = contentOverride ?? resume;
     if (target.kind === "version") {
@@ -1165,7 +1133,6 @@ export function CareerKitApp({
           {active !== "library" && active !== "campus" ? <AppPageHeader
             active={active}
             pageTitle={pageTitle}
-            pageSubtitle={pageSubtitle}
             showResumeHeader={isResumeOptimizationResult}
             isPending={isPending}
             toast={toast}
@@ -1173,7 +1140,7 @@ export function CareerKitApp({
           /> : null}
 
           {active === "campus" && <CampusWorkspace />}
-          {active === "intelligence" && <CareerWorkspace onNavigate={navigateTo} />}
+          {active === "intelligence" && <CareerWorkspace />}
           {active === "dashboard" && (
             <DashboardWorkspace
               summary={dashboard}

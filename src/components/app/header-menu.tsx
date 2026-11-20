@@ -48,6 +48,7 @@ export function HeaderMenuPanel({
   provider,
   onNavigate,
   onClose,
+  onStartTour,
 }: {
   menu: HeaderMenuKey;
   reminders: Array<{ application: ApplicationView; job?: JobView; dueDate: string | null }>;
@@ -56,8 +57,10 @@ export function HeaderMenuPanel({
   provider: string;
   onNavigate: (key: NavKey) => void;
   onClose: () => void;
+  onStartTour: () => void;
 }) {
   const t = useTranslations("app.menu");
+  const guideLabel = useTranslations("app.topbar")("guide");
 
   return (
     <section className="absolute top-full right-0 z-50 mt-2 w-[min(320px,calc(100vw-32px))] rounded-xl border border-line bg-surface p-4 text-left text-ui-body text-foreground shadow-lg">
@@ -110,7 +113,6 @@ export function HeaderMenuPanel({
             </div>
           </div>
           <div className="rounded-lg bg-surface-low p-3 text-xs leading-5 text-muted-foreground">
-            <p>{t("mode")}</p>
             <p>{t("provider", { provider })}</p>
           </div>
           <button
@@ -120,6 +122,7 @@ export function HeaderMenuPanel({
           >
             {t("backDashboard")}
           </button>
+          <button type="button" onClick={onStartTour} className="min-h-[44px] text-ui-meta font-medium text-brand hover:underline sm:hidden">{guideLabel}</button>
         </div>
       )}
     </section>

@@ -815,26 +815,19 @@ function PipelineApplicationCard({
           <Edit3 className="h-3 w-3" />
           {t("card.edit")}
         </button>
+        <span title={t("card.dragHint")} className="hidden shrink-0 text-muted-foreground lg:block"><GripVertical aria-hidden className="size-4" /></span>
       </div>
-      <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
-        {application.notes || t("card.noNotes")}
-      </p>
-      <div className="mt-3 grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
-        <span className="rounded-md bg-surface-low px-2 py-1">{t("card.source", { source: sourceLabel(displaySource(job?.source), t) })}</span>
-        <span className="rounded-md bg-surface-low px-2 py-1">
+      <p className="mt-2 min-h-[40px] line-clamp-2 text-ui-meta text-muted-foreground">{application.notes}</p>
+      <div className="mt-3 grid gap-2 text-ui-meta text-muted-foreground sm:grid-cols-2">
+        <span>{t("card.source", { source: sourceLabel(displaySource(job?.source), t) })}</span>
+        <span>
           {t("card.stageDate", { label: statusShortDateLabel(application.status, t), date: application.stageDate ?? application.appliedAt ?? t("card.notRecorded") })}
         </span>
-        <span className="rounded-md bg-surface-low px-2 py-1">{t("card.followUp", { date: application.nextFollowUpAt ?? t("card.notSet") })}</span>
-        <span className="rounded-md bg-surface-low px-2 py-1">{t("card.resume", { resume: version?.name ?? t("card.unbound") })}</span>
+        <span>{t("card.followUp", { date: application.nextFollowUpAt ?? t("card.notSet") })}</span>
+        <span className="truncate" title={version?.name}>{t("card.resume", { resume: version?.name ?? t("card.unbound") })}</span>
       </div>
       <div className="mt-3 rounded-lg border border-line bg-surface-low px-3 py-3">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <span className="text-[0.6875rem] font-semibold text-foreground">{t("card.progress")}</span>
-          <span className="rounded-full bg-background px-2 py-0.5 text-[0.625rem] font-medium text-muted-foreground">
-            {applicationStageLabel(application, t)}
-          </span>
-        </div>
-        <ol className="grid gap-1" style={{ gridTemplateColumns: `repeat(${timeline.length}, minmax(0, 1fr))` }}>
+        <ol aria-label={t("card.progress")} className="grid gap-1" style={{ gridTemplateColumns: `repeat(${timeline.length}, minmax(0, 1fr))` }}>
           {timeline.map((item, index) => {
             const Icon = statusMeta[item.status].icon;
             const nextItem = timeline[index + 1];
@@ -865,10 +858,7 @@ function PipelineApplicationCard({
           })}
         </ol>
       </div>
-      <div className="mt-3 flex items-center justify-center gap-1 rounded-md border border-dashed border-line bg-surface-low px-2 py-2 text-xs font-medium text-muted-foreground">
-        <GripVertical className="h-3.5 w-3.5" />
-        {t("card.dragHint")}
-      </div>
+
     </article>
   );
 }

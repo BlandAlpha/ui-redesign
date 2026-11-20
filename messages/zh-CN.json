@@ -2,13 +2,30 @@
   "app": {
     "brandName": "TRACEFOLIO",
     "careerWorkspace": {
-      "overview": "能力地图",
+      "overview": "总览",
       "memory": "职业记忆",
       "evidence": "能力证据",
       "growth": "成长计划",
-      "openEvidence": "整理项目材料",
+      "openEvidence": "添加证据",
       "export": "导出职业档案",
-      "loading": "正在读取职业档案…"
+      "loading": "正在读取职业档案…",
+      "map": "能力地图",
+      "nextStep": "下一步",
+      "firstEvidence": "整理第一份能力证据",
+      "reviewEvidence": "复核证据",
+      "compareRole": "对照目标岗位",
+      "recentEvidence": "最近的能力证据",
+      "viewEvidence": "查看全部",
+      "evidenceCount": "{count} 条证据",
+      "memoryCount": "{count} 条职业记忆",
+      "growthCount": "{count} 项进行中的成长任务",
+      "inspectAiMaterials": "查看可用于 AI 的材料",
+      "noAiMaterials": "暂无可用于 AI 的记录。",
+      "evidenceStatus": {
+        "accepted": "本人已确认",
+        "pending": "待确认",
+        "rejected": "已排除"
+      }
     },
     "language": {
       "label": "语言",
@@ -40,7 +57,6 @@
         "company_asc": "公司名称：按拼音"
       },
       "title": "校招信息库",
-      "subtitle": "找公司、看招聘方向，快速找到值得进一步了解的机会。",
       "catalogCount": "{count, number} 条招聘信息",
       "searchPlaceholder": "搜索公司、岗位或专业，多个关键词用空格分隔",
       "clearSearch": "清空搜索",
@@ -80,7 +96,6 @@
       },
       "loading": "正在加载招聘信息…",
       "loadFailed": "暂时无法读取招聘信息",
-      "loadFailedHint": "招聘信息读取失败，请稍后重试。",
       "retry": "重新加载",
       "resultCount": "找到 {count, number} 条信息",
       "sortUpdated": "按原表更新时间排列",
@@ -111,10 +126,6 @@
     "navGroups": {
       "workflow": "求职流程",
       "system": "系统"
-    },
-    "sidebar": {
-      "localMode": "本地模式",
-      "encrypted": "凭证本机加密 · 记忆由你掌控"
     },
     "topbar": {
       "notifications": "跟进提醒",
@@ -152,18 +163,11 @@
       "openPipeline": "查看投递跟进",
       "followUpsDue": "跟进岗位",
       "resumeVersions": "简历版本",
-      "mode": "模式：本地单用户",
       "provider": "Provider：{provider}",
       "backDashboard": "回到控制中心"
     },
     "pages": {
-      "resumeOptimizationTitle": "AI简历优化",
-      "resumeOptimizationSubtitle": "基于当前简历优化表达清晰度、信息密度和成果呈现，生成可继续编辑的专属版本。",
-      "matchSubtitle": "基于目标 JD 重新梳理简历重点，强化真实经历中的匹配证据，生成可继续编辑的专属版本。",
-      "pipelineSubtitle": "记录投递渠道、当前阶段、面试轮次和跟进日期，把每个岗位从投递到 Offer 的进展集中管理。",
-      "interviewSubtitle": "结合所选简历与目标岗位生成模拟问题，完成逐题练习后获得结构化反馈与复盘建议。",
-      "defaultSubtitle": "简历到 Offer 的校招实习工作台",
-      "intelligenceSubtitle": "从真实经历出发，建立属于你的职业记忆与能力证据。"
+      "resumeOptimizationTitle": "AI简历优化"
     },
     "dashboard": {
       "metrics": {
@@ -210,7 +214,6 @@
     },
     "resumeLibrary": {
       "title": "我的简历",
-      "count": "共 {count} 份简历 · {jobOptimizedCount} 份岗位优化版本 · {generalOptimizedCount} 份通用优化版本",
       "importing": "解析中...",
       "import": "导入简历",
       "create": "新建简历",
@@ -303,15 +306,13 @@
     "title": "选择简历",
     "library": "简历库",
     "upload": "上传文件",
-    "doubleClickEdit": "双击进入编辑",
+    "editResume": "编辑 {name}",
     "empty": "暂无可用简历，先在简历编辑器中新建并保存一份。",
     "parsing": "正在解析简历...",
     "import": "导入简历",
-    "waiting": "可能需要一些时间，请保持页面打开",
-    "drag": "拖拽或点击上传",
     "supported": "支持 PDF / DOC / DOCX / 图片 / TXT / MD / JSON",
     "selected": "已选择 {fileName} · {count} 字",
-    "snapshotOnly": "文件仅作为本次操作的简历快照，不会覆盖简历库中的内容。"
+    "snapshotOnly": "仅用于本次操作。"
   },
   "jdPreparation": {
     "uploadJd": "上传 JD",
@@ -363,26 +364,18 @@
       "back": "返回修改 JD",
       "track": "加入投递岗位跟进"
     },
-    "resumePickerDescription": "选择一份作为优化基准 · 共 {count} 份",
     "form": {
-      "title": "填写目标 JD",
-      "description": "粘贴完整的公司、岗位名称、岗位职责、任职要求与加分项，TRACEFOLIO会结合所选简历提炼重点并生成匹配版本。",
-      "jdLabel": "公司 / 岗位 / 职位描述 / 任职要求 / 加分项 *",
-      "jdPlaceholder": "请粘贴完整 JD，建议包含公司名称、完整岗位名称、岗位职责、任职要求、加分项与业务方向...",
-      "settingsTitle": "优化设置",
-      "settingsDescription": "选择本次改写侧重点；所有内容都以原简历事实为边界，不新增不存在的经历或数据。"
+      "title": "目标岗位",
+      "jdLabel": "职位描述（必填）",
+      "jdPlaceholder": "粘贴公司、岗位名称和岗位要求",
+      "settingsTitle": "优化设置"
     },
     "preferences": {
       "impact": "强调项目成果",
-      "impactDescription": "优先突出项目职责与结果证据",
-      "quantify": "补充量化表达",
-      "quantifyDescription": "只重写已有结果，不编造数字",
-      "ats": "ATS 友好",
-      "atsDescription": "优化关键词与格式，通过初筛",
-      "skills": "突出匹配技能",
-      "skillsDescription": "优先展示与 JD 对齐的技能"
+      "quantify": "量化已有成果",
+      "ats": "优化 ATS 格式",
+      "skills": "突出匹配技能"
     },
-    "currentBase": "当前基准：{name}",
     "edit": "修改",
     "generatingButton": "正在生成...",
     "startButton": "开始 JD匹配优化",
@@ -435,14 +428,10 @@
       "hr": "HR 面"
     },
     "setup": {
-      "resumePickerDescription": "选择本轮回答所依据的简历 · 共 {count} 份",
-      "title": "填写目标 JD",
-      "description": "粘贴完整的公司、岗位名称、岗位职责与任职要求，TRACEFOLIO会结合所选简历生成面试准备资料或模拟问题。",
-      "jdLabel": "公司 / 岗位 / 职位描述 / 任职要求 / 加分项 *",
-      "jdPlaceholder": "请粘贴完整 JD，建议包含公司名称、完整岗位名称、岗位职责、任职要求、加分项与业务场景...",
+      "title": "目标岗位",
+      "jdLabel": "职位描述（必填）",
+      "jdPlaceholder": "粘贴公司、岗位名称和岗位要求",
       "settingsTitle": "面试设置",
-      "settingsDescription": "选择本轮面试侧重点；问题生成后保持固定，不会在作答过程中改变。",
-      "hint": "AI 将结合所选简历与这段岗位描述生成本轮问题。",
       "needResume": "请先选择一份包含有效内容的简历。",
       "needJd": "请先填写岗位 JD。",
       "generating": "正在生成问题",
@@ -493,7 +482,6 @@
       "planTitle": "准备计划",
       "introductionTitle": "定制自我介绍",
       "reverseQuestionsTitle": "反问建议",
-      "footerHint": "准备完成后可直接生成本轮题目；模拟阶段不会展示答案评分点。",
       "back": "调整素材",
       "start": "生成题目并开始",
       "export": {
@@ -816,7 +804,6 @@
     },
     "exportDialog": {
       "title": "导出简历",
-      "description": "选择导出格式下载当前简历。",
       "close": "关闭导出窗口",
       "exporting": "正在导出...",
       "cancel": "取消",
@@ -839,13 +826,10 @@
       "title": "AI 简历诊断",
       "description": "先分析当前简历，再由你选择要处理的问题和优化方向。诊断不会修改原简历。",
       "analyzing": "正在分析简历...",
-      "analyzingHint": "检查行动与结果、事实证据、表达清晰度和结构，不使用机械的 STAR 打分。",
-      "startHint": "分析只会读取脱敏后的当前简历，不会修改或覆盖任何内容。",
       "analysisDone": "简历诊断完成。",
       "analysisFailed": "简历诊断失败，请稍后重试。",
       "summary": "诊断概览",
       "issuesTitle": "诊断问题",
-      "issuesHint": "可由 AI 安全改写的问题会默认选择；缺少的真实信息需要先补充，GPA、日期等硬事实矛盾需要先核实。",
       "selectedCount": "已选择 {count} 项",
       "noIssues": "当前没有发现需要优先处理的明显问题。你可以关闭窗口继续使用原简历。",
       "severity": {
@@ -1242,51 +1226,50 @@
     "celebrationAnnouncement": "求职之旅正式开启，祝你顺利拿到心动的 Offer！",
     "steps": {
       "welcome": {
-        "title": "第一次使用TRACEFOLIO？\n先看教程",
-        "description": "TRACEFOLIO会陪你完成从基础简历、岗位匹配、面试准备、投递跟进到收到 Offer 的完整流程。"
+        "title": "使用引导",
+        "description": "选择要查看的工作区。"
       },
       "dashboard": {
         "title": "控制中心是你的求职总览",
-        "description": "投递进度、近期任务、面试安排和 Offer 都会集中显示在这里。刚开始没有数据是正常的，完成后面的流程后这里会自动更新。"
+        "description": "查看待跟进的投递和面试。"
       },
       "settings": {
         "title": "开始前，先连接 AI",
-        "description": "在设置中选择 AI 服务，填写 API Key，保存后测试连接。你的 Key 会加密保存在本机，不会写入项目代码。"
+        "description": "使用 AI 功能前，在这里配置并测试模型。"
       },
       "agent": {
         "title": "用TRACEFOLIO Agent 直接说出你要做的事",
-        "description": "点击右下角的TRACEFOLIO Agent，可以检索岗位、投递和脱敏简历，也能在你选择参数并确认后创建简历、生成岗位定制版本、面试资料与模拟面试、切换模板或更新投递卡片。它仍是实验功能，不会删除业务数据。"
+        "description": "从右下角打开 Agent。保存业务改动前会请你确认。"
       },
       "resume": {
         "title": "先准备一份基础简历",
-        "description": "可以导入已有简历，也可以从头新建。原简历会一直保留，AI 分析和岗位优化会生成独立版本，不会直接覆盖原稿。"
+        "description": "新建或导入一份简历。"
       },
       "campus": {
         "title": "在校招信息库寻找机会",
-        "description": "按公司、岗位关键词、毕业届别和工作地点筛选招聘信息，打开详情查看要求与投递入口。信息请以招聘方官方公告为准；当前安装未配置招聘数据时，这里会显示空状态。"
+        "description": "按公司、岗位或地点搜索。"
       },
       "match": {
         "title": "再针对具体岗位做 JD 匹配",
-        "description": "选择一份简历并粘贴完整 JD，TRACEFOLIO会生成岗位定制简历，同时保留优化前后内容并建立对应岗位档案。"
+        "description": "选择简历并粘贴岗位描述，生成岗位定制版本。"
       },
       "interview": {
         "title": "围绕同一个岗位准备面试",
-        "description": "先生成结构化面试准备资料，再进行模拟问答，最后查看 AI 复盘。选择岗位定制简历时，资料会优先关联到对应岗位。"
+        "description": "选择岗位和简历，再生成准备资料或开始模拟。"
       },
       "pipeline": {
         "title": "用投递跟进记录求职进展",
-        "description": "把岗位更新为待投递、已投递、笔试、面试或 Offer，并记TRACEFOLIO段日期和下次跟进时间。控制中心会据此提醒你。"
+        "description": "记录阶段和下次跟进日期。"
       },
       "library": {
         "title": "所有成果会整理到求职资料库",
-        "description": "按岗位可以查看一套完整档案，按分类可以集中查找简历、原始 JD 和面试资料。以后不需要再去各页面翻找历史成果。"
+        "description": "按岗位或类别查找已生成的资料。"
       }
     }
   },
   "careerLibrary": {
     "title": "求职资料库",
     "sampleJob": "示例岗位",
-    "summary": "共 {jobs} 个岗位档案 · {artifacts} 份系统生成成果",
     "groups": {
       "job": "按岗位",
       "type": "按分类"
@@ -1300,7 +1283,6 @@
     "emptyDescription": "完成 JD 匹配、简历优化或面试准备后，系统生成的成果会自动出现在这里。",
     "emptySearch": "没有找到符合当前搜索的资料。",
     "count": "{count} 份",
-    "jobCount": "{count} 个岗位",
     "categoryCount": "{count} 份",
     "updatedAt": "最近更新于 {date}",
     "delete": "删除资料",
@@ -1323,7 +1305,6 @@
     "editJob": {
       "action": "修改岗位名称",
       "title": "修改岗位档案名称",
-      "description": "修改后，关联的简历和面试资料仍保留在当前岗位档案中，并会按照新的公司名称重新归类。",
       "company": "公司名称",
       "role": "岗位名称",
       "save": "保存修改",
@@ -1404,7 +1385,6 @@
       "reverseQuestions": "反问问题",
       "perLine": "（每行一项）"
     },
-    "generalResumeSubtitle": "不关联特定岗位的通用简历优化成果",
     "categories": {
       "resume": "简历成果",
       "analysis": "岗位分析",
@@ -1423,13 +1403,6 @@
       "job-analysis": "原始 JD",
       "interview-preparation": "准备资料",
       "interview-session": "模拟与复盘"
-    },
-    "kindDescriptions": {
-      "general-resume": "通用简历诊断、优化结果与修改记录。",
-      "tailored-resume": "针对目标 JD 生成的岗位定制简历。",
-      "job-analysis": "进行 JD 匹配优化时使用的原始职位描述。",
-      "interview-preparation": "围绕目标岗位整理的结构化面试准备资料。",
-      "interview-session": "模拟面试问题、回答与 AI 复盘。"
     },
     "metrics": {
       "jobAnalysis": "原始 JD {count}",
@@ -1468,7 +1441,6 @@
     "questionOutline": "问题目录",
     "overviewSummary": "共 {count} 份岗位资料 · 最近更新于 {date}",
     "overviewPathTitle": "求职准备路径",
-    "overviewPathDescription": "从岗位信息到简历与面试，直接进入已经生成的资料。",
     "overviewPath": {
       "analysis": "查看原始 JD 与岗位要求",
       "resume": "查看针对岗位生成的简历版本",
@@ -1476,9 +1448,7 @@
       "empty": "暂无资料"
     },
     "overviewCompositionTitle": "资料构成",
-    "overviewCompositionDescription": "按岗位分析、简历成果和面试资料统计当前档案中的真实内容。",
     "jobFilesTitle": "档案内的生成成果",
-    "jobFilesDescription": "按最近更新时间排列，点击即可查看完整内容。",
     "emptyCategories": {
       "analysis": "暂无岗位分析，完成 JD 匹配后会自动归入这里。",
       "resume": "暂无岗位定制简历。",
@@ -1563,9 +1533,6 @@
     },
     "unknown": "未识别",
     "notRecorded": "该历史资料没有记录此项内容。",
-    "issuesDescription": "仅展示生成时实际保存的诊断问题。",
-    "beforeAfterDescription": "对照优化前后的真实内容，不补造缺失信息。",
-    "originalResumeDescription": "生成该版本时实际使用的基础简历。",
     "before": "优化前",
     "after": "优化后",
     "optimizationSummary": "优化说明",
@@ -1603,7 +1570,6 @@
     "inputPlaceholder": "说说你想处理的求职事项…",
     "send": "发送",
     "stop": "停止生成",
-    "approvalHint": "写入任何业务数据前都会先让你确认",
     "setup": {
       "title": "先配置 AI 服务",
       "description": "Agent 会沿用TRACEFOLIO现有的 Provider 与模型设置，不需要额外的 Agent Key。",

@@ -180,8 +180,6 @@ export function MatchView({
       : { resumeVersionId: selectedLibraryKey === "main" ? mainResumeVersionId : selectedLibraryKey };
   const resumeReady = resumeSource === "upload" ? Boolean(uploadedResume) : Boolean(selectedBaseResume);
   const canOptimize = resumeReady && Boolean(jdDraft.trim()) && !isGenerating && !isUploadingResume;
-  const currentBaseLabel =
-    resumeSource === "upload" ? uploadedResume?.fileName ?? t("upload.waitingFile") : selectedResumeOption?.name ?? t("upload.selectResume");
 
   useEffect(() => {
     if (resumeSource !== "library") return undefined;
@@ -405,7 +403,6 @@ export function MatchView({
       <form onSubmit={handleSubmit}>
         <ResumeJdPreparation
           resumePicker={{
-            description: t("resumePickerDescription", { count: resumeOptions.length }),
             source: resumeSource,
             selectedId: selectedLibraryKey,
             options: resumeOptions,
@@ -419,28 +416,23 @@ export function MatchView({
             onOpenResume: (id) => onOpenResume(id === "main" ? undefined : id),
           }}
           title={t("form.title")}
-          description={t("form.description")}
           jdLabel={t("form.jdLabel")}
           jdValue={jdDraft}
           onJdChange={setJdDraft}
           jdPlaceholder={t("form.jdPlaceholder")}
           settingsTitle={t("form.settingsTitle")}
-          settingsDescription={t("form.settingsDescription")}
           onJdImportStatus={setSaveStatus}
           settings={
             <div className="grid gap-4 md:grid-cols-2">
-              <PreparationOptionCard checked={preferences.emphasizeImpact} icon={ListChecks} label={t("preferences.impact")} description={t("preferences.impactDescription")} onChange={() => togglePreference("emphasizeImpact")} />
-              <PreparationOptionCard checked={preferences.quantifyResults} icon={Edit3} label={t("preferences.quantify")} description={t("preferences.quantifyDescription")} onChange={() => togglePreference("quantifyResults")} />
-              <PreparationOptionCard checked={preferences.atsFriendly} icon={FileCheck2} label={t("preferences.ats")} description={t("preferences.atsDescription")} onChange={() => togglePreference("atsFriendly")} />
-              <PreparationOptionCard checked={preferences.highlightMatchedSkills} icon={Target} label={t("preferences.skills")} description={t("preferences.skillsDescription")} onChange={() => togglePreference("highlightMatchedSkills")} />
+              <PreparationOptionCard checked={preferences.emphasizeImpact} icon={ListChecks} label={t("preferences.impact")} onChange={() => togglePreference("emphasizeImpact")} />
+              <PreparationOptionCard checked={preferences.quantifyResults} icon={Edit3} label={t("preferences.quantify")} onChange={() => togglePreference("quantifyResults")} />
+              <PreparationOptionCard checked={preferences.atsFriendly} icon={FileCheck2} label={t("preferences.ats")} onChange={() => togglePreference("atsFriendly")} />
+              <PreparationOptionCard checked={preferences.highlightMatchedSkills} icon={Target} label={t("preferences.skills")} onChange={() => togglePreference("highlightMatchedSkills")} />
             </div>
           }
           footer={
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs leading-5 text-muted-foreground">
-                {t("currentBase", { name: currentBaseLabel })}
-                {resumeSource === "library" && selectedLibraryKey ? <button type="button" onClick={() => onOpenResume(selectedLibraryKey === "main" ? undefined : selectedLibraryKey)} className="ml-2 font-medium text-primary hover:text-brand-hover">{t("edit")}</button> : null}
-              </p>
+              {!resumeReady || !jdDraft.trim() ? <p className="text-ui-meta text-muted-foreground">{t(resumeReady ? "status.needJd" : "status.needResume")}</p> : <span />}
               <div className="flex gap-3">
                 <button type="submit" disabled={!canOptimize} className={cn("flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground", !canOptimize && "cursor-not-allowed opacity-55")} title={canOptimize ? undefined : resumeReady ? t("status.needJd") : t("status.needResume")}>
                   <WandSparkles className="h-4 w-4" />{isGenerating ? t("generatingButton") : t("startButton")}
@@ -448,11 +440,7 @@ export function MatchView({
               </div>
             </div>
           }
-          notice={
-            <>
-              {saveStatus ? <p className="px-5 pb-4 text-sm text-muted-foreground lg:px-6">{saveStatus}</p> : null}
-            </>
-          }
+          notice={saveStatus ? <p role="status" className="text-ui-meta text-muted-foreground">{saveStatus}</p> : null}
         />
       </form>
       <AiSetupRequiredDialog

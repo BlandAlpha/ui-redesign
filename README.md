@@ -56,7 +56,7 @@ npm run typecheck
 4. 将一个缺口加入成长计划；完成实践后保存新的作品证据并关联任务。
 5. 在设置中连接模型，再进入 JD 定制、面试助手或右下角 Agent。新记录默认不发送给模型；逐条允许后才能参与个性化分析。
 
-首次启动保留 LuJie 的演示简历、岗位和引导。可以在设置中清空上游示例；该操作不删除 TRACEFOLIO 职业记忆与证据。
+首次启动保留 LuJie 的演示简历和岗位。使用引导可从帮助入口打开。可以在设置中清空上游示例；该操作不删除 TRACEFOLIO 职业记忆与证据。
 
 ## 可选 Codex 配置
 
@@ -86,7 +86,7 @@ GitHub PAT 只用于代码仓库访问，不能当作模型密钥。适配器固
 - [架构、数据模型与 Codex 集成](docs/ARCHITECTURE.md)
 - [开发与商业验证路线图](docs/ROADMAP.md)
 - [开源来源、许可和修改记录](docs/UPSTREAM.md)
-- Web UI 重构：[视觉与文案规范](docs/ui/VISUAL_GUIDELINES.md) · [前端构建规范](docs/ui/FRONTEND_STANDARDS.md) · [开发 Agent 手册](docs/ui/AGENT_PLAYBOOK.md)
+- Web UI 重构：[视觉与文案规范](docs/ui/VISUAL_GUIDELINES.md) · [前端构建规范](docs/ui/FRONTEND_STANDARDS.md) · [卡片设计规范](docs/ui/CARDS.md) · [开发 Agent 手册](docs/ui/AGENT_PLAYBOOK.md)
 
 ## 开源致谢
 

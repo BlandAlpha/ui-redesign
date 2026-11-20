@@ -34,8 +34,7 @@ export function AppSidebar({
 
       <nav aria-label={t("navGroups.workflow")} className="flex flex-1 flex-col gap-6">
         {navGroups.map((group) => (
-          <div key={group.labelKey} className="flex flex-col gap-2">
-            <p className="px-3 text-ui-meta font-medium text-muted-foreground">{t(`navGroups.${group.labelKey}`)}</p>
+          <div key={group.labelKey} className={cn("flex flex-col gap-1", group.labelKey === "system" && "border-t border-sidebar-border pt-4")}>
             {group.items.map((item) => {
               const Icon = item.icon;
               return (
@@ -60,10 +59,6 @@ export function AppSidebar({
           </div>
         ))}
       </nav>
-      <div className="mt-6 border-t border-line px-2 pt-4 text-ui-meta text-muted-foreground">
-        <p>{t("sidebar.localMode")}</p>
-        <p>{t("sidebar.encrypted")}</p>
-      </div>
     </aside>
   );
 }

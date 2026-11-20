@@ -28,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 
 type AiSettingsPanelProps = {
@@ -110,7 +109,6 @@ export function AiSettingsPanel({
   const requiresKey = providerRequiresApiKey(providerId);
   const canEditBaseUrl = Boolean(provider.baseUrlEditable);
   const selectedModelValue = customModel ? CUSTOM_MODEL_VALUE : model;
-  const apiKeyStatus = saved.hasApiKey ? t("savedKey") : t("missingKey");
 
   function buildSettingsPayload(clearApiKey: boolean): AiSettingsRequestPayload {
     return {
@@ -339,17 +337,9 @@ export function AiSettingsPanel({
 
         {status ? <p className="rounded-lg bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground">{status}</p> : null}
 
-        <Separator />
-
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          <InfoTile label={t("runtime")} value={t("runtimeLocal")} />
-          <InfoTile label={t("dataLocation")} value="SQLite" />
-          <InfoTile label={t("keyStorage")} value={apiKeyStatus} />
-          <InfoTile label={t("testStatus")} value={t(`status.${saved.aiLastTestStatus}`)} />
-        </div>
       </CardContent>
       <CardFooter className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm font-medium text-muted-foreground">{apiKeyStatus}</p>
+        <p className="text-ui-meta text-muted-foreground">{t("testStatus")} · {t(`status.${saved.aiLastTestStatus}`)}</p>
         <div className="flex flex-wrap justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => saveSettings({ clearApiKey: true })} disabled={isSaving || isTesting || !saved.hasApiKey}>
             <Trash2 className="h-4 w-4" />
@@ -373,14 +363,6 @@ function getResponseMessage(payload: SettingsResponse | ErrorResponse, fallback:
   return "message" in payload && payload.message ? payload.message : fallback;
 }
 
-function InfoTile({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-line bg-surface-low p-4">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-2 truncate text-sm font-semibold text-foreground">{value}</p>
-    </div>
-  );
-}
 
 function Field({
   label,

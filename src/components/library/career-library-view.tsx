@@ -1,12 +1,12 @@
 "use client";
 
-// Modified for TRACEFOLIO (2026): library workspace typography.
+// Modified for TRACEFOLIO (2026): aligned job and artifact cards.
 
 // Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
 
 import { useMemo, useState } from "react";
 import { FolderKanban, FolderOpen, Pencil, Search, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import type { InitialData } from "@/components/app/types";
 import { Badge } from "@/components/ui/badge";
@@ -15,19 +15,18 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RecordCard, RecordCardAction } from "@/components/ui/record-card";
 import {
   buildCareerArtifacts,
   buildCareerJobArchives,
   filterCareerArtifacts,
   filterCareerJobArchives,
-  groupCareerJobArchivesByCompany,
   type CareerArtifact,
   type CareerArtifactCategory,
   type CareerLibraryGroup,
@@ -66,8 +65,6 @@ export function CareerLibraryView({
   );
   const visibleArtifacts = sortByUpdatedAt(filterCareerArtifacts(artifacts, query), sortOrder);
   const visibleArchives = sortByUpdatedAt(filterCareerJobArchives(archives, query), sortOrder);
-  const companyGroups = groupCareerJobArchivesByCompany(visibleArchives);
-  const generatedCount = artifacts.length;
   const hasItems = group === "job" ? visibleArchives.length > 0 : visibleArtifacts.length > 0;
 
   return (
@@ -75,9 +72,6 @@ export function CareerLibraryView({
       <div className="flex flex-col gap-6 border-b border-line pb-7 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("summary", { jobs: archives.length, artifacts: generatedCount })}
-          </p>
         </div>
         <div className="inline-flex self-start rounded-xl border border-line bg-surface-low p-1">
           {(["job", "type"] as const).map((item) => (
@@ -126,36 +120,27 @@ export function CareerLibraryView({
           </div>
         </div>
       ) : group === "job" ? (
-        <div className="mt-9 space-y-10">
-          {companyGroups.map((company) => (
-            <section key={company.id}>
-              <div className="mb-4 flex items-baseline gap-3 border-b border-line pb-3">
-                <h2 className="text-ui-section font-semibold text-foreground">{company.name}</h2>
-                <span className="text-sm text-muted-foreground">
-                  {t("jobCount", { count: company.archives.length })}
-                </span>
-              </div>
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {company.archives.map((archive) => (
-                  <LibraryCard
-                    key={archive.id}
-                    title={`${archive.company} · ${archive.role}`}
-                    subtitle={archive.city}
-                    metrics={jobMetrics(archive, t)}
-                    updatedAt={archive.updatedAt}
-                    badge={archive.status ? t(`status.${archive.status}`) : undefined}
-                    isSample={archive.isSample}
-                    onOpen={() => onOpenJob(archive.id)}
-                    onEdit={archive.jobId ? () => setEditDraft({ id: archive.jobId!, company: archive.company, title: archive.role }) : undefined}
-                    onDelete={archive.jobId ? () => onDeleteJob(archive.jobId!) : undefined}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {visibleArchives.map((archive) => {
+            const jobId = archive.jobId;
+            return (
+              <LibraryCard
+                key={archive.id}
+                title={archive.role}
+                context={[archive.company, archive.city].filter(Boolean).join(" · ")}
+                metrics={jobMetrics(archive, t)}
+                updatedAt={archive.updatedAt}
+                badge={archive.status ? t(`status.${archive.status}`) : undefined}
+                isSample={archive.isSample}
+                onOpen={() => onOpenJob(archive.id)}
+                onEdit={jobId ? () => setEditDraft({ id: jobId, company: archive.company, title: archive.role }) : undefined}
+                onDelete={jobId ? () => onDeleteJob(jobId) : undefined}
+              />
+            );
+          })}
         </div>
       ) : (
-        <div className="mt-9 space-y-11">
+        <div className="mt-6 space-y-8">
           {(["resume", "analysis", "interview"] as CareerArtifactCategory[]).map((category) => {
             const items = visibleArtifacts.filter((artifact) => artifact.category === category);
             if (!items.length) return null;
@@ -163,17 +148,16 @@ export function CareerLibraryView({
               <section key={category}>
                 <div className="mb-4 flex items-center gap-3">
                   <h2 className="text-ui-section font-semibold text-foreground">{t(`categories.${category}`)}</h2>
-                  <span className="text-sm text-muted-foreground">{t("count", { count: items.length })}</span>
                 </div>
-                <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {items.map((artifact) => (
                     <LibraryCard
                       key={artifact.key}
-                      title={artifactTitle(artifact, t)}
-                      subtitle={artifactSubtitle(artifact, t)}
+                      title={artifact.name}
+                      context={t(`kinds.${artifact.kind}`)}
+                      heading="h3"
                       metrics={artifactMetrics(artifact, t)}
                       updatedAt={artifact.updatedAt}
-                      badge={t(`kinds.${artifact.kind}`)}
                       onOpen={() => onOpenArtifact(artifact)}
                       onDelete={() => onDeleteArtifact(artifact)}
                     />
@@ -202,7 +186,6 @@ export function CareerLibraryView({
           >
             <DialogHeader>
               <DialogTitle>{t("editJob.title")}</DialogTitle>
-              <DialogDescription>{t("editJob.description")}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-2">
               <div className="grid gap-2">
@@ -241,7 +224,7 @@ export function CareerLibraryView({
 
 function LibraryCard({
   title,
-  subtitle,
+  context,
   metrics,
   updatedAt,
   badge,
@@ -249,9 +232,10 @@ function LibraryCard({
   onOpen,
   onEdit,
   onDelete,
+  heading,
 }: {
   title: string;
-  subtitle?: string;
+  context: string;
   metrics: string[];
   updatedAt: string;
   badge?: string;
@@ -259,63 +243,41 @@ function LibraryCard({
   onOpen: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  heading?: "h2" | "h3";
 }) {
   const t = useTranslations("careerLibrary");
+  const locale = useLocale();
+  const date = new Date(updatedAt);
+  const dateLabel = Number.isNaN(date.getTime()) ? updatedAt : date.toLocaleDateString(locale);
+
   return (
-    <article
-      className="group relative overflow-hidden rounded-2xl border border-line bg-surface text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary/20"
-    >
-      <button
-        type="button"
-        onClick={onOpen}
-        className="absolute inset-0 z-0 rounded-2xl focus:outline-none"
-        aria-label={title}
-      />
-      <div className="pointer-events-none grid h-36 place-items-center border-b border-line bg-surface-low/80">
-        <FolderKanban
-          className="h-20 w-20 text-primary/70 transition group-hover:scale-[1.03]"
-          strokeWidth={1.15}
-        />
-      </div>
-      <div className="pointer-events-none min-h-44 p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            {isSample ? <Badge variant="outline" className="mb-2">{t("sampleJob")}</Badge> : null}
-            <h3 className="line-clamp-2 text-ui-label font-semibold text-foreground">{title}</h3>
-            {subtitle ? <p className="mt-1.5 line-clamp-1 text-sm text-muted-foreground">{subtitle}</p> : null}
-          </div>
-          <div className="pointer-events-none relative z-10 flex shrink-0 items-center gap-2">
-            {badge ? <Badge variant="secondary">{badge}</Badge> : null}
-            {onEdit ? (
-              <button
-                type="button"
-                onClick={onEdit}
-                className="pointer-events-auto grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-surface-low hover:text-foreground"
-                aria-label={t("editJob.action")}
-                title={t("editJob.action")}
-              >
-                <Pencil className="h-4 w-4" />
-              </button>
-            ) : null}
-            {onDelete ? (
-              <button
-                type="button"
-                onClick={onDelete}
-                className="pointer-events-auto grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
-                aria-label={t("delete")}
-                title={t("delete")}
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            ) : null}
-          </div>
-        </div>
-        <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
-          {metrics.filter(Boolean).map((metric) => <span key={metric}>{metric}</span>)}
-        </div>
-        <p className="mt-4 text-xs text-muted-foreground">{t("updatedAt", { date: formatDate(updatedAt) })}</p>
-      </div>
-    </article>
+    <RecordCard
+      heading={heading}
+      title={title}
+      onOpen={onOpen}
+      context={(
+        <>
+          <FolderKanban aria-hidden className="size-4 shrink-0 text-brand" />
+          <span className="truncate" title={context}>{context}</span>
+        </>
+      )}
+      detail={metrics.join(" · ")}
+      metadata={(
+        <>
+          <time className="shrink-0 tabular-nums" dateTime={updatedAt} aria-label={t("updatedAt", { date: dateLabel })}>{dateLabel}</time>
+          <span className="flex min-w-0 items-center gap-2">
+            {isSample ? <Badge variant="outline" className="shrink-0">{t("sampleJob")}</Badge> : null}
+            {badge ? <span className="truncate" title={badge}>{badge}</span> : null}
+          </span>
+        </>
+      )}
+      actions={(onEdit || onDelete) && (
+        <>
+          {onEdit ? <RecordCardAction label={t("editJob.action")} onClick={onEdit}><Pencil aria-hidden /></RecordCardAction> : null}
+          {onDelete ? <RecordCardAction label={t("delete")} onClick={onDelete} destructive><Trash2 aria-hidden /></RecordCardAction> : null}
+        </>
+      )}
+    />
   );
 }
 
@@ -342,22 +304,6 @@ function artifactMetrics(artifact: CareerArtifact, t: ReturnType<typeof useTrans
     case "interview-session":
       return [t("metrics.questions", { count: first }), t("metrics.answers", { count: second }), third ? t("metrics.hasFeedback") : t("metrics.noFeedback")];
   }
-}
-
-function artifactTitle(artifact: CareerArtifact, t: ReturnType<typeof useTranslations>) {
-  if (artifact.kind === "general-resume" || artifact.kind === "tailored-resume") return artifact.name;
-  return `${artifact.name} · ${t(`kindShort.${artifact.kind}`)}`;
-}
-
-function artifactSubtitle(artifact: CareerArtifact, t: ReturnType<typeof useTranslations>) {
-  if (artifact.kind === "general-resume") return t("generalResumeSubtitle");
-  if (artifact.company || artifact.role) return [artifact.company, artifact.role].filter(Boolean).join(" · ");
-  return t(`kindDescriptions.${artifact.kind}`);
-}
-
-function formatDate(value: string) {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString();
 }
 
 function sortByUpdatedAt<T extends { updatedAt: string }>(items: T[], order: "recent" | "oldest") {

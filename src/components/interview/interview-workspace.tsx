@@ -710,7 +710,6 @@ function SetupScreen(props: {
   return (
     <ResumeJdPreparation
       resumePicker={{
-        description: t("setup.resumePickerDescription", { count: props.resumeOptions.length }),
         source: props.resumeSource,
         selectedId: props.selectedResumeId,
         options: props.resumeOptions,
@@ -724,16 +723,14 @@ function SetupScreen(props: {
         onOpenResume: (id) => props.onOpenResume(id === "main" ? undefined : id),
       }}
       title={t("setup.title")}
-      description={t("setup.description")}
       jdLabel={t("setup.jdLabel")}
       jdValue={props.jdDraft}
       onJdChange={props.onJdChange}
       jdPlaceholder={t("setup.jdPlaceholder")}
       settingsTitle={t("setup.settingsTitle")}
-      settingsDescription={t("setup.settingsDescription")}
       onJdImportStatus={props.onMessage}
       settings={
-        <div className="grid w-full gap-4 md:grid-cols-2">
+        <fieldset aria-label={t("setup.settingsTitle")} className="grid w-full auto-rows-fr gap-3 md:grid-cols-2">
           {MODE_OPTIONS.map((option) => (
             <PreparationOptionCard
               key={option.value}
@@ -741,14 +738,15 @@ function SetupScreen(props: {
               icon={option.icon}
               label={t(option.labelKey)}
               description={t(option.descriptionKey)}
+              radio={{ name: "interview-mode", value: option.value }}
               onChange={() => props.onModeChange(option.value as InterviewMode)}
             />
           ))}
-        </div>
+        </fieldset>
       }
       footer={
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-5 text-muted-foreground">{props.message || props.disabledReason || t("setup.hint")}</p>
+          {props.message || props.disabledReason ? <p role="status" className="text-ui-meta text-muted-foreground">{props.message || props.disabledReason}</p> : <span /> }
           <div className="flex flex-wrap justify-end gap-2">
             <Button variant="outline" size="lg" disabled={!props.canStart} onClick={props.onPrepare} title={props.disabledReason || undefined}>
               {props.setupTask === "preparation" ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : <BookOpenCheck data-icon="inline-start" />}
@@ -984,7 +982,7 @@ export function PreparationScreen({
             </div>
           </div>
           <div className="px-5 py-6 lg:px-8">
-            <PreparationSectionHeading number="01" title={t("preparation.sections.overview")} />
+            <PreparationSectionHeading title={t("preparation.sections.overview")} />
             <p className="mt-4 text-sm leading-7 text-muted-foreground">{preparation.meta.roleSummary}</p>
             {preparation.meta.assumptions.length ? (
               <div className="mt-5 flex items-start gap-2 rounded-lg bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground">
@@ -996,7 +994,7 @@ export function PreparationScreen({
         </section>
 
         <section id="prep-capability" className="scroll-mt-24 rounded-lg border border-line bg-surface p-5 lg:p-8">
-          <PreparationSectionHeading number="02" title={t("preparation.capabilityTitle")} description={t("preparation.capabilityDescription")} />
+          <PreparationSectionHeading title={t("preparation.capabilityTitle")} description={t("preparation.capabilityDescription")} />
           <p className="mt-4 text-sm leading-7 text-muted-foreground">{preparation.capabilityProfile.overview}</p>
           <div className="mt-5 rounded-lg border border-line bg-background px-2 py-5 sm:px-5">
             <div className="h-[22rem] w-full">
@@ -1036,7 +1034,7 @@ export function PreparationScreen({
         </section>
 
         <section id="prep-evidence" className="scroll-mt-24 rounded-lg border border-line bg-surface p-5 lg:p-8">
-          <PreparationSectionHeading number="03" title={t("preparation.evidenceTitle")} description={t("preparation.evidenceDescription")} />
+          <PreparationSectionHeading title={t("preparation.evidenceTitle")} description={t("preparation.evidenceDescription")} />
           <div className="mt-5 divide-y divide-line border-y border-line">
             {preparation.evidenceMatrix.map((item, index) => (
               <article key={`${item.requirement}-${index}`} className="py-5">
@@ -1058,7 +1056,7 @@ export function PreparationScreen({
         </section>
 
         <section id="prep-knowledge" className="scroll-mt-24 rounded-lg border border-line bg-surface p-5 lg:p-8">
-          <PreparationSectionHeading number="04" title={t("preparation.knowledgeTitle")} />
+          <PreparationSectionHeading title={t("preparation.knowledgeTitle")} />
           <div className="mt-5 divide-y divide-line border-y border-line">
             {preparation.knowledgeTopics.map((item, index) => (
               <details key={`${item.topic}-${index}`} className="py-4" open={index === 0}>
@@ -1081,7 +1079,7 @@ export function PreparationScreen({
         </section>
 
         <section id="prep-deep-dives" className="scroll-mt-24 rounded-lg border border-line bg-surface p-5 lg:p-8">
-          <PreparationSectionHeading number="05" title={t("preparation.deepDiveTitle")} />
+          <PreparationSectionHeading title={t("preparation.deepDiveTitle")} />
           <div className="mt-5 divide-y divide-line border-y border-line">
             {preparation.deepDives.map((item, index) => (
               <details key={`${item.resumeItem}-${index}`} className="py-4" open={index === 0}>
@@ -1098,7 +1096,7 @@ export function PreparationScreen({
         </section>
 
         <section id="prep-questions" className="scroll-mt-24 rounded-lg border border-line bg-surface p-5 lg:p-8">
-          <PreparationSectionHeading number="06" title={t("preparation.questionsTitle")} />
+          <PreparationSectionHeading title={t("preparation.questionsTitle")} />
           <ol className="mt-5 divide-y divide-line border-y border-line">
             {preparation.targetedQuestions.map((item, index) => (
               <li key={`${item.question}-${index}`} className="py-5">
@@ -1114,7 +1112,7 @@ export function PreparationScreen({
         </section>
 
         <section id="prep-plan" className="scroll-mt-24 rounded-lg border border-line bg-surface p-5 lg:p-8">
-          <PreparationSectionHeading number="07" title={t("preparation.planTitle")} />
+          <PreparationSectionHeading title={t("preparation.planTitle")} />
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             <PlanBlock label={priorityLabels.must} items={preparation.preparationPlan.mustPrepare} />
             <PlanBlock label={priorityLabels.should} items={preparation.preparationPlan.shouldPrepare} />
@@ -1132,7 +1130,7 @@ export function PreparationScreen({
         </>}
 
         <section className="flex flex-col justify-between gap-4 rounded-lg border border-line bg-surface p-5 sm:flex-row sm:items-center">
-          <p className="text-sm text-muted-foreground">{exportMessage || message || t("preparation.footerHint")}</p>
+          {exportMessage || message ? <p role="status" className="text-ui-meta text-muted-foreground">{exportMessage || message}</p> : <span />}
           <div className="flex flex-wrap gap-2">
             {!libraryMode ? <Button variant="outline" disabled={isWorking} onClick={onBack}><ArrowLeft data-icon="inline-start" />{t("preparation.back")}</Button> : null}
             <DropdownMenu>
@@ -1170,14 +1168,11 @@ export function PreparationScreen({
   );
 }
 
-function PreparationSectionHeading({ number, title, description }: { number: string; title: string; description?: string }) {
+function PreparationSectionHeading({ title, description }: { title: string; description?: string }) {
   return (
-    <div className="flex items-start gap-3">
-      <span className="mt-1 font-mono text-xs font-semibold text-brand">{number}</span>
-      <div>
-        <h3 className="text-ui-section font-semibold">{title}</h3>
-        {description ? <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p> : null}
-      </div>
+    <div>
+      <h3 className="text-ui-section font-semibold">{title}</h3>
+      {description ? <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p> : null}
     </div>
   );
 }

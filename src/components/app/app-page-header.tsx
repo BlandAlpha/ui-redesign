@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 export function AppPageHeader({
   active,
   pageTitle,
-  pageSubtitle,
   showResumeHeader = false,
   isPending,
   toast,
@@ -20,7 +19,6 @@ export function AppPageHeader({
 }: {
   active: NavKey;
   pageTitle?: string;
-  pageSubtitle: string;
   showResumeHeader?: boolean;
   isPending: boolean;
   toast: string;
@@ -31,15 +29,12 @@ export function AppPageHeader({
   return (
     <div
       className={cn(
-        "mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5 lg:mb-8 lg:pb-6",
+        "mb-5 flex flex-wrap items-center justify-between gap-4 lg:mb-7",
         active === "resume" && !showResumeHeader && "hidden",
       )}
     >
       <div className="min-w-0">
         <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{pageTitle}</h1>
-        <p className="mt-1 max-w-[720px] text-ui-body text-muted-foreground">
-          {pageSubtitle}
-        </p>
       </div>
       {active === "pipeline" || isPending || toast ? (
         <div className="flex flex-wrap items-center gap-3">

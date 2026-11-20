@@ -518,7 +518,6 @@ function JobOverview({
       <section className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
         <header className="border-b border-line px-5 py-4 sm:px-6">
           <h3 className="text-base font-semibold text-foreground">{t("overviewPathTitle")}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{t("overviewPathDescription")}</p>
         </header>
         <div className="grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {categories.map(({ key, icon: Icon, artifacts }) => {
@@ -560,7 +559,6 @@ function JobOverview({
         <header className="mb-3 flex items-end justify-between gap-4">
           <div>
             <h3 className="text-base font-semibold text-foreground">{t("jobFilesTitle")}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{t("jobFilesDescription")}</p>
           </div>
           <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
             {t("categoryCount", { count: archive.artifacts.length })}
@@ -590,7 +588,6 @@ function JobOverview({
       <section className="rounded-xl border border-line bg-surface p-5 sm:p-6">
         <header>
           <h3 className="text-base font-semibold text-foreground">{t("overviewCompositionTitle")}</h3>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">{t("overviewCompositionDescription")}</p>
         </header>
         <div className="mt-5 grid items-center gap-5 md:grid-cols-[minmax(17rem,1fr)_minmax(16rem,0.8fr)] md:gap-10">
           <div className="relative h-72 min-w-0">
@@ -730,7 +727,7 @@ function ResumeArtifactContent({
 
   if (nodeId === "original-resume" && base) {
     return (
-      <ContentPage title={t("tree.original-resume")} description={t("originalResumeDescription")}>
+      <ContentPage title={t("tree.original-resume")}>
         <ResumeDocument content={base} />
       </ContentPage>
     );
@@ -761,7 +758,7 @@ function ResumeArtifactContent({
   }
   if (nodeId === "issues") {
     return (
-      <ContentPage title={t("tree.issues")} description={t("issuesDescription")}>
+      <ContentPage title={t("tree.issues")}>
         <div className="space-y-3">
           {(stages?.diagnosis?.issues ?? []).map((issue) => (
             <div key={issue.id} className="rounded-xl border border-line p-4">
@@ -782,7 +779,7 @@ function ResumeArtifactContent({
   }
   if (sectionId && base) {
     return (
-      <ContentPage title={t(`resumeSections.${sectionId}`)} description={t("beforeAfterDescription")}>
+      <ContentPage title={t(`resumeSections.${sectionId}`)}>
         <div className="grid gap-5 xl:grid-cols-2">
           <ResumeSectionPanel title={t("before")} content={base} sectionId={sectionId} />
           <ResumeSectionPanel title={t("after")} content={version.content} sectionId={sectionId} emphasized />
@@ -791,7 +788,7 @@ function ResumeArtifactContent({
     );
   }
   return (
-    <ContentPage title={artifactTitle(artifact, t)} description={version.summary || t(`kindDescriptions.${artifact.kind}`)}>
+    <ContentPage title={artifactTitle(artifact, t)} description={version.summary}>
       <div className="grid gap-4 sm:grid-cols-3">
         <MetricCard value={artifact.metrics[0]} label={t("overviewMetrics.issues")} />
         <MetricCard value={artifact.metrics[1]} label={t("overviewMetrics.sections")} />
@@ -982,7 +979,7 @@ function TextPage({ title, text, preserve = false }: { title: string; text: stri
   return <ContentPage title={title}><div className={cn("rounded-2xl border border-line bg-surface p-6 text-sm leading-7", preserve && "whitespace-pre-wrap")}>{text}</div></ContentPage>;
 }
 function ListPage({ title, items, empty }: { title: string; items: string[]; empty?: string }) {
-  return <ContentPage title={title}><ContentSection title={title}><BulletList items={items} empty={empty} /></ContentSection></ContentPage>;
+  return <ContentPage title={title}><div className="text-ui-body"><BulletList items={items} empty={empty} /></div></ContentPage>;
 }
 function BulletList({ items, empty }: { items: string[]; empty?: string }) {
   if (!items.length) return <p className="text-muted-foreground">{empty ?? "—"}</p>;

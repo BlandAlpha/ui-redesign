@@ -13,12 +13,9 @@ import {
 } from "react";
 import {
   ArrowRight,
-  Brain,
   Check,
   Download,
   FileCheck2,
-  Fingerprint,
-  Leaf,
   Loader2,
   Plus,
   Sparkles,
@@ -40,11 +37,10 @@ import {
   type MatchRow,
 } from "@/lib/career/domain";
 import type { CareerReview } from "@/lib/career/codex";
-import type { NavKey } from "@/lib/navigation";
 
 type WorkspaceData = CareerState & { codexAvailable: boolean };
 type Save = (url: string, body: unknown, method?: string) => Promise<boolean>;
-const tabs = ["overview", "memory", "evidence", "growth"] as const;
+const tabs = ["overview", "evidence", "map", "memory", "growth"] as const;
 type Tab = (typeof tabs)[number];
 const categories = {
   profile: "职业背景",
@@ -79,11 +75,7 @@ async function requestJson(url: string, body?: unknown, method = "GET") {
   return result;
 }
 
-export function CareerWorkspace({
-  onNavigate,
-}: {
-  onNavigate: (key: NavKey) => void;
-}) {
+export function CareerWorkspace() {
   const t = useTranslations("app");
   const workspaceT = useTranslations("app.careerWorkspace");
   const [data, setData] = useState<WorkspaceData | null>(null);
@@ -124,22 +116,6 @@ export function CareerWorkspace({
         : null,
     [data, requiredSkills],
   );
-  const sharedCount = useMemo(
-    () =>
-      data
-        ? data.memories.filter(
-            (item) =>
-              item.confirmed &&
-              item.useInAI &&
-              (!item.expiresAt || new Date(item.expiresAt) > new Date()),
-          ).length +
-          data.evidence.filter(
-            (item) => item.status === "accepted" && item.useInAI,
-          ).length
-        : 0,
-    [data],
-  );
-
   const save: Save = async (url, body, method = "POST") => {
     setBusy(true);
     setError("");
@@ -148,7 +124,7 @@ export function CareerWorkspace({
       await requestJson(url, body, method);
       setReview(null);
       await refresh();
-      setMessage("已保存。之后的分析会读取最新记录。");
+      setMessage("已保存。");
       return true;
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "操作未完成。");
@@ -253,18 +229,12 @@ export function CareerWorkspace({
             </Tabs.Tab>
           ))}
         </Tabs.List>
-        <div className="flex flex-wrap items-center gap-2">
-          {tab === "overview" && data?.evidence.length === 0 && (
-            <Button onClick={() => setTab("evidence")}>
-              <Plus aria-hidden />
-              {workspaceT("openEvidence")}
-            </Button>
-          )}
+        {tab === "memory" ? (
           <Button variant="ghost" disabled={!data} onClick={exportProfile}>
             <Download aria-hidden />
             {workspaceT("export")}
           </Button>
-        </div>
+        ) : null}
       </div>
       {error && (
         <div
@@ -302,48 +272,18 @@ export function CareerWorkspace({
       ) : (
         <>
           <Tabs.Panel value="overview">
-            <div className="space-y-6">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <Metric
-                  icon={<Brain size={20} />}
-                  label="已确认的职业记忆"
-                  value={
-                    data.memories.filter(
-                      (item) =>
-                        item.confirmed &&
-                        (!item.expiresAt ||
-                          new Date(item.expiresAt) > new Date()),
-                    ).length
-                  }
-                  detail="目标、偏好与真实约束"
-                  onClick={() => setTab("memory")}
-                />
-                <Metric
-                  icon={<FileCheck2 size={20} />}
-                  label="已确认的能力证据"
-                  value={
-                    data.evidence.filter((item) => item.status === "accepted")
-                      .length
-                  }
-                  detail="保留材料来源与个人贡献"
-                  onClick={() => setTab("evidence")}
-                />
-                <Metric
-                  icon={<Leaf size={20} />}
-                  label="正在推进的成长任务"
-                  value={
-                    data.actions.filter((item) => item.status === "open").length
-                  }
-                  detail="用新证据验证每一次进步"
-                  onClick={() => setTab("growth")}
-                />
-              </div>
-              <div className="workspace-grid items-start">
-                <Panel
-                  className="workspace-span-8"
-                  title="对照目标岗位，找到证据与缺口"
-                  description="从 JD 中挑选必需技能后填入。首版按你确认的技能标签逐项对照，作品内容仍需复核。"
-                >
+            <CareerOverview
+              data={data}
+              onOpenEvidence={(item) => {
+                setEditingEvidence(item);
+                setTab("evidence");
+              }}
+              onNavigate={setTab}
+            />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="map" className="max-w-[720px] space-y-5">
+              <Panel title={workspaceT("compareRole")}>
                   <form
                     onSubmit={(event) => {
                       event.preventDefault();
@@ -410,7 +350,7 @@ export function CareerWorkspace({
                         </div>
                       </div>
                       <p className="text-xs leading-5 text-muted-foreground">
-                        覆盖度只统计技能标签与材料的关联，不代表能力评级或录用概率。“已确认”指你已核对材料，尚未独立核验。
+                        覆盖率按技能标签计算。材料由本人确认，未经独立核验。
                       </p>
                       {match.rows.map((row) => (
                         <div
@@ -441,7 +381,7 @@ export function CareerWorkspace({
                                   }}
                                   className="mt-2 block text-left text-xs leading-5 text-brand underline underline-offset-4"
                                 >
-                                  {item.title} · 查看来源与个人贡献
+                                  {item.title}
                                 </button>
                               )
                             );
@@ -481,78 +421,24 @@ export function CareerWorkspace({
                         ) : (
                           <Sparkles size={15} />
                         )}
-                        用 Codex 深度复盘
+                        用 Codex 复盘
                       </button>
                       <p className="text-xs leading-5 text-muted-foreground">
                         {data.codexAvailable
                           ? "复盘会将你允许用于 AI 的记忆和证据发送至所配置的模型服务。"
-                          : "Codex 深度复盘需要配置引擎；上面的证据覆盖分析可直接使用。"}
+                          : "配置 Codex 后可复盘。"}
                       </p>
                     </div>
                   )}
                 </Panel>
-                <div className="workspace-span-4 space-y-5">
-                  <Panel
-                    title="把积累带进下一次机会"
-                    description="先沉淀事实，再决定如何表达。"
-                  >
-                    <div className="space-y-3">
-                      <button
-                        className={`${quietButton} w-full justify-between`}
-                        onClick={() => setTab("memory")}
-                      >
-                        记录求职目标与偏好
-                        <ArrowRight size={15} />
-                      </button>
-                      <button
-                        className={`${quietButton} w-full justify-between`}
-                        onClick={() => setTab("evidence")}
-                      >
-                        整理一个真实项目
-                        <ArrowRight size={15} />
-                      </button>
-                      <button
-                        className={`${quietButton} w-full justify-between`}
-                        onClick={() => onNavigate("match")}
-                      >
-                        定制岗位简历
-                        <ArrowRight size={15} />
-                      </button>
-                      <button
-                        className={`${quietButton} w-full justify-between`}
-                        onClick={() => onNavigate("interview")}
-                      >
-                        进入模拟面试
-                        <ArrowRight size={15} />
-                      </button>
-                    </div>
-                  </Panel>
-                  <Panel
-                    title="由你决定，Agent 记住什么"
-                    description="新记录默认仅保存在本机。只有已确认、未过期且允许用于 AI 的记录，才会进入后续 Agent 分析。"
-                  >
-                    <p className="text-sm text-brand-foreground">
-                      当前有 {sharedCount} 条记录可用于 AI
-                    </p>
-                    <button
-                      className="mt-4 text-xs text-muted-foreground underline underline-offset-4"
-                      onClick={() => {
-                        const context = buildCareerGrounding(
-                          data,
-                          requiredSkills.join(" "),
-                        );
-                        window.alert(context || "当前没有可供 AI 读取的记录。");
-                      }}
-                    >
-                      查看本次可用的记忆与证据
-                    </button>
-                  </Panel>
-                </div>
-              </div>
+              <details className="rounded-lg border border-line bg-surface px-4 py-3">
+                <summary className="cursor-pointer text-ui-body font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{workspaceT("inspectAiMaterials")}</summary>
+                <pre className="mt-3 whitespace-pre-wrap break-words text-ui-meta text-muted-foreground">{buildCareerGrounding(data, requiredSkills.join(" ")) || workspaceT("noAiMaterials")}</pre>
+              </details>
               {review && (
                 <Panel
                   title="Codex 证据复盘"
-                  description="模型建议供你复核，不会自动写入职业事实。"
+                  description="AI 建议"
                 >
                   <p className="text-sm leading-7">{review.summary}</p>
                   <div className="mt-4 space-y-3">
@@ -601,7 +487,6 @@ export function CareerWorkspace({
                   </ul>
                 </Panel>
               )}
-            </div>
           </Tabs.Panel>
 
           <Tabs.Panel value="memory" keepMounted>
@@ -609,7 +494,6 @@ export function CareerWorkspace({
               <Panel
                 className="workspace-span-6"
                 title={editingMemory ? "修正职业记忆" : "新增职业记忆"}
-                description="记录稳定的职业背景、目标、偏好与约束。相同主题请编辑已有记忆，避免冲突。"
               >
                 <MemoryForm
                   key={editingMemory?.id ?? "new"}
@@ -619,17 +503,14 @@ export function CareerWorkspace({
                   done={() => setEditingMemory(undefined)}
                 />
               </Panel>
-              <div className="workspace-span-6 space-y-3">
+              <div className={cn("workspace-span-6", data.memories.length > 0 && "divide-y divide-line rounded-xl border border-line bg-surface")}>
                 {data.memories.length === 0 && (
-                  <Empty
-                    title="从一个真实目标开始"
-                    description="例如：希望在上海从事 AI 应用开发，优先考虑有工程实践空间的团队。"
-                  />
+                  <Empty title="暂无职业记忆" />
                 )}
                 {data.memories.map((item) => (
                   <article
                     key={item.id}
-                    className="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-5"
+                    className="min-w-0 p-4 sm:p-5"
                   >
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="secondary">{categories[item.category]}</Badge>
@@ -678,7 +559,7 @@ export function CareerWorkspace({
               <Panel
                 className="workspace-span-6"
                 title={editingEvidence ? "复核能力证据" : "新增能力证据"}
-                description="保留原始材料的摘录、定位和你的个人贡献。提交链接不会自动读取或验证内容。"
+                description="链接仅用于标记来源。"
               >
                 <EvidenceForm
                   key={editingEvidence?.id ?? "new"}
@@ -688,17 +569,14 @@ export function CareerWorkspace({
                   done={() => setEditingEvidence(undefined)}
                 />
               </Panel>
-              <div className="workspace-span-6 space-y-3">
+              <div className={cn("workspace-span-6", data.evidence.length > 0 && "divide-y divide-line rounded-xl border border-line bg-surface")}>
                 {data.evidence.length === 0 && (
-                  <Empty
-                    title="能力，从做过的事情中找到"
-                    description="添加一个项目 README、PR、技术方案或面试复盘，说明自己具体负责了什么。"
-                  />
+                  <Empty title="暂无能力证据" />
                 )}
                 {data.evidence.map((item) => (
                   <article
                     key={item.id}
-                    className="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-5"
+                    className="min-w-0 p-4 sm:p-5"
                   >
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="material">{sources[item.sourceType]}</Badge>
@@ -724,7 +602,7 @@ export function CareerWorkspace({
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {item.useInAI ? "允许用于 AI" : "仅本机保存"} ·
-                      尚未独立核验
+                      未经独立核验
                     </p>
                     <div className="mt-4 flex gap-2">
                       <button
@@ -751,19 +629,10 @@ export function CareerWorkspace({
 
           <Tabs.Panel value="growth">
             <div className="space-y-4">
-              <div className="rounded-2xl bg-brand-muted p-5">
-                <h3 className="font-semibold text-brand-foreground">
-                  从“还不会”走向“拿得出证据”
-                </h3>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                  在能力地图中，把缺口加入成长计划。完成作品或面试练习后，先保存对应证据，再关联任务；复核或删除证据时，任务会重新打开。
-                </p>
-              </div>
               {data.actions.length === 0 && (
-                <Empty
-                  title="让目标变成下一步行动"
-                  description="先分析目标岗位的技能要求，再把需要补充证据的技能加入计划。"
-                />
+                <Empty title="暂无成长任务">
+                  <Button variant="outline" onClick={() => setTab("map")}>{workspaceT("compareRole")}</Button>
+                </Empty>
               )}
               {data.actions.map((action) => (
                 <Panel
@@ -876,46 +745,76 @@ function Panel({
     </section>
   );
 }
-function Metric({
-  icon,
-  label,
-  value,
-  detail,
-  onClick,
+function CareerOverview({
+  data,
+  onOpenEvidence,
+  onNavigate,
 }: {
-  icon: ReactNode;
-  label: string;
-  value: number;
-  detail: string;
-  onClick: () => void;
+  data: WorkspaceData;
+  onOpenEvidence: (item?: Evidence) => void;
+  onNavigate: (tab: Tab) => void;
 }) {
+  const t = useTranslations("app.careerWorkspace");
+  const pending = data.evidence.find((item) => item.status === "pending");
+  const hasEvidence = data.evidence.some((item) => item.status !== "rejected");
+  const activeActions = data.actions.filter((item) => item.status === "open");
+  const activeAction = activeActions[0];
+  const task = pending
+    ? { title: pending.title, label: t("reviewEvidence"), run: () => onOpenEvidence(pending) }
+    : !hasEvidence
+      ? { title: t("firstEvidence"), label: t("openEvidence"), run: () => onOpenEvidence() }
+      : activeAction
+        ? { title: activeAction.title, label: t("growth"), run: () => onNavigate("growth") }
+        : { title: t("compareRole"), label: t("map"), run: () => onNavigate("map") };
+  const recent = data.evidence.slice(0, 3);
+  const counts = [
+    { tab: "evidence", value: data.evidence.length, label: t("evidenceCount", { count: data.evidence.length }) },
+    { tab: "memory", value: data.memories.length, label: t("memoryCount", { count: data.memories.length }) },
+    { tab: "growth", value: activeActions.length, label: t("growthCount", { count: activeActions.length }) },
+  ] as const;
+
   return (
-    <button
-      onClick={onClick}
-      className="min-w-0 rounded-xl border border-line bg-surface p-4 text-left transition-colors duration-150 hover:border-brand/40 hover:bg-brand-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:p-5"
-    >
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <span className="text-brand">{icon}</span>
-      </div>
-      <p className="mt-3 text-3xl font-semibold tracking-tight">
-        {value}
-        <span className="ml-2 text-xs font-normal text-muted-foreground">
-          条
-        </span>
-      </p>
-      <p className="mt-2 text-xs text-muted-foreground">{detail}</p>
-    </button>
+    <div className="max-w-[960px] space-y-8">
+      <section className="rounded-2xl bg-brand-muted p-6 sm:p-8">
+        <p className="mb-2 text-ui-meta font-medium text-brand">{t("nextStep")}</p>
+        <h2 className="max-w-[680px] text-ui-title font-semibold [overflow-wrap:anywhere] sm:text-ui-title-wide">{task.title}</h2>
+        <Button type="button" className="mt-5" onClick={task.run}>{task.label}<ArrowRight aria-hidden /></Button>
+      </section>
+      {recent.length ? (
+        <section>
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-2">
+            <h2 className="text-ui-section font-semibold">{t("recentEvidence")}</h2>
+            <Button variant="ghost" onClick={() => onNavigate("evidence")}>{t("viewEvidence")}</Button>
+          </div>
+          <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+            {recent.map((item) => (
+              <li key={item.id}>
+                <button type="button" onClick={() => onOpenEvidence(item)} className="flex min-h-[52px] w-full items-center gap-3 rounded-lg px-4 py-2 text-left hover:bg-brand-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring">
+                  <FileCheck2 aria-hidden className="size-4 shrink-0 text-brand" />
+                  <span className="min-w-0 flex-1 truncate text-ui-body font-medium" title={item.title}>{item.title}</span>
+                  <Badge variant={item.status === "accepted" ? "success" : item.status === "pending" ? "warning" : "secondary"}>{t(`evidenceStatus.${item.status}`)}</Badge>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+      {counts.some((item) => item.value) ? (
+        <div className="flex flex-wrap gap-x-5 gap-y-1 border-t border-line pt-2 text-ui-meta text-muted-foreground">
+          {counts.filter((item) => item.value).map((item) => (
+            <button key={item.tab} type="button" onClick={() => onNavigate(item.tab)} className="min-h-[44px] text-left hover:text-brand hover:underline focus-visible:outline-2 focus-visible:outline-ring">{item.label}</button>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
-function Empty({ title, description }: { title: string; description: string }) {
+
+function Empty({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-line bg-surface-low px-5 py-8">
-      <Fingerprint size={25} className="mb-4 text-brand" />
-      <h3 className="font-medium">{title}</h3>
-      <p className="mt-2 max-w-lg text-sm leading-7 text-muted-foreground">
-        {description}
-      </p>
+    <div className="space-y-3 rounded-xl border border-dashed border-line px-4 py-5">
+      <p className="text-ui-body text-muted-foreground">{title}</p>
+      {children}
     </div>
   );
 }

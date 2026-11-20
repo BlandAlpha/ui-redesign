@@ -36,7 +36,6 @@ export function ResumeThemePanel({
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h2 className="font-serif text-lg font-semibold">{t("title")}</h2>
-          <p className="mt-1 text-xs text-muted-foreground">{t("description")}</p>
         </div>
         <Button variant="ghost" size="icon" onClick={onClose} title={t("close")}>
           <X />

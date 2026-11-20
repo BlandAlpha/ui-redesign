@@ -122,6 +122,7 @@ export function AppTopbar({
                 setHeaderMenu(null);
               }}
               onClose={() => setHeaderMenu(null)}
+              onStartTour={onStartTour}
             />
           )}
         </div>
