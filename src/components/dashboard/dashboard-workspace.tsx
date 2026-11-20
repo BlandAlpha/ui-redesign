@@ -27,17 +27,17 @@ type DashboardWorkspaceProps = {
 };
 
 const actionRowMeta = [
-  { badge: "bg-red-100 text-red-700 ring-1 ring-inset ring-red-200", hover: "hover:bg-red-50" },
-  { badge: "bg-amber-100 text-amber-800 ring-1 ring-inset ring-amber-200", hover: "hover:bg-amber-50" },
+  { badge: "bg-destructive-soft text-destructive", hover: "hover:bg-destructive-soft/50" },
+  { badge: "bg-warning-soft text-warning", hover: "hover:bg-warning-soft/50" },
   { badge: "bg-blue-100 text-blue-700 ring-1 ring-inset ring-blue-200", hover: "hover:bg-blue-50" },
 ] as const;
 
 const stageMeta: Record<ApplicationStatus, { bar: string }> = {
   APPLIED: { bar: "bg-primary" },
-  ASSESSMENT: { bar: "bg-amber-500" },
-  INTERVIEW: { bar: "bg-blue-600" },
-  OFFER: { bar: "bg-emerald-600" },
-  REJECTED: { bar: "bg-red-500" },
+  ASSESSMENT: { bar: "bg-chart-5" },
+  INTERVIEW: { bar: "bg-chart-4" },
+  OFFER: { bar: "bg-chart-1" },
+  REJECTED: { bar: "bg-destructive" },
   ARCHIVED: { bar: "bg-zinc-400" },
 };
 
@@ -47,15 +47,15 @@ export function DashboardWorkspace({ summary, onNavigate, onAddApplication }: Da
 
   return (
     <div className="space-y-5">
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         <MetricButton icon={BriefcaseBusiness} label={t("metrics.submitted")} value={summary.metrics.submitted} onClick={() => onNavigate("pipeline")} />
         <MetricButton icon={ClipboardList} label={t("metrics.active")} value={summary.metrics.active} onClick={() => onNavigate("pipeline")} />
         <MetricButton icon={CalendarClock} label={t("metrics.followUpsDue")} value={summary.metrics.followUpsDue} onClick={() => onNavigate("pipeline")} />
         <MetricButton icon={Trophy} label={t("metrics.offers")} value={summary.metrics.offers} onClick={() => onNavigate("pipeline")} />
       </section>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(240px,0.75fr)]">
-        <DashboardSection title={t("sections.actions")}>
+      <div className="workspace-grid">
+        <DashboardSection title={t("sections.actions")} className="workspace-span-8">
           <div className="divide-y divide-line">
             {summary.actions.map((action, index) => {
               const rowMeta = actionRowMeta[index] ?? actionRowMeta[2];
@@ -96,7 +96,7 @@ export function DashboardWorkspace({ summary, onNavigate, onAddApplication }: Da
           </div>
         </DashboardSection>
 
-        <DashboardSection title={t("sections.quickStart")}>
+        <DashboardSection title={t("sections.quickStart")} className="workspace-span-4">
           <div className="divide-y divide-line">
             <QuickAction icon={FilePenLine} label={t("quickActions.resume")} onClick={() => onNavigate("resume")} />
             <QuickAction icon={Target} label={t("quickActions.match")} onClick={() => onNavigate("match")} />
@@ -145,13 +145,13 @@ function MetricButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex min-h-24 items-center justify-between rounded-lg border border-line bg-surface px-4 py-4 text-left hover:border-primary/35 hover:bg-surface-low"
+      className="flex min-h-20 min-w-0 items-center justify-between gap-2 rounded-xl border border-line bg-surface p-3 text-left transition-colors duration-150 hover:border-primary/35 hover:bg-brand-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:p-4"
     >
       <span>
         <span className="block text-xs text-muted-foreground">{label}</span>
         <span className="mt-2 block text-2xl font-semibold tabular-nums">{value}</span>
       </span>
-      <Icon className="size-5 text-muted-foreground" />
+      <Icon aria-hidden className="size-5 shrink-0 text-brand" />
     </button>
   );
 }
@@ -161,16 +161,18 @@ function DashboardSection({
   actionLabel,
   onAction,
   children,
+  className,
 }: {
   title: string;
   actionLabel?: string;
   onAction?: () => void;
   children: ReactNode;
+  className?: string;
 }) {
   return (
-    <section className="rounded-lg border border-line bg-surface px-5 py-4">
+    <section className={cn("min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-5", className)}>
       <header className="flex min-h-8 items-center justify-between gap-3 border-b border-line pb-3">
-        <h2 className="text-sm font-semibold">{title}</h2>
+        <h2 className="text-ui-section font-semibold">{title}</h2>
         {actionLabel && onAction ? (
           <button type="button" onClick={onAction} className="text-xs font-medium text-primary hover:underline">
             {actionLabel}

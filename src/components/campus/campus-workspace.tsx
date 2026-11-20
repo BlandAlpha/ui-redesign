@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): workspace typography and page header.
+
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -99,9 +101,9 @@ function CampusCatalog({ initialQuery }: { initialQuery: CampusQuery }) {
 
   return (
     <section className="space-y-6">
-      <header className="space-y-3">
+      <header className="space-y-1 border-b border-line pb-5 lg:pb-6">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-serif text-3xl font-semibold tracking-tight">{t("title")}</h1>
+          <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
         </div>
         <p className="text-sm leading-6 text-muted-foreground">{t("subtitle")}</p>
         {!loading && !failed && initialQuery.recordId && !data?.selectedRecord && selection === undefined ? <p role="status" className="text-sm text-muted-foreground">{t("recordNotFound")}</p> : null}
@@ -211,7 +213,7 @@ function CampusCatalog({ initialQuery }: { initialQuery: CampusQuery }) {
       <Dialog modal={false} open={Boolean(selected)} onOpenChange={(open) => { if (!open) setSelected(null); }}>
         <DialogPortal><DialogPrimitive.Popup className="fixed inset-y-0 right-0 z-50 flex h-dvh w-full flex-col gap-5 overflow-y-auto border-l bg-background p-5 shadow-xl outline-none sm:w-[clamp(320px,22vw,440px)]">
           {selected && data ? <>
-            <DialogHeader className="sticky -top-5 z-10 -mx-5 -mt-5 border-b bg-background p-5 pr-12"><DialogTitle className="font-serif text-xl leading-7">{selected.company}</DialogTitle><DialogDescription>{[selected.companyType, selected.industry, ...selected.recruitmentTypes].filter(Boolean).join(" · ")}</DialogDescription><DialogClose render={<Button variant="ghost" size="icon" aria-label={t("closeDetails")} className="absolute right-3 top-4" />}><X aria-hidden /></DialogClose></DialogHeader>
+            <DialogHeader className="sticky -top-5 z-10 -mx-5 -mt-5 border-b bg-background p-5 pr-12"><DialogTitle className="text-ui-section font-semibold">{selected.company}</DialogTitle><DialogDescription>{[selected.companyType, selected.industry, ...selected.recruitmentTypes].filter(Boolean).join(" · ")}</DialogDescription><DialogClose render={<Button variant="ghost" size="icon" aria-label={t("closeDetails")} className="absolute right-3 top-4" />}><X aria-hidden /></DialogClose></DialogHeader>
             <dl className="grid grid-cols-1 gap-4 text-sm">
               <div><dt className="mb-1 text-xs text-muted-foreground">{t("fields.target")}</dt><dd>{selected.targets.join(" / ") || t("notProvided")}</dd></div>
               <div><dt className="mb-1 text-xs text-muted-foreground">{t("fields.exam")}</dt><dd>{selected.exams.join(" / ") || t("notProvided")}</dd></div>

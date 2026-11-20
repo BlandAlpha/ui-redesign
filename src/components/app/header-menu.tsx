@@ -1,6 +1,6 @@
 "use client";
 
-// Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
+// Modified for TRACEFOLIO (2026): shared workspace toolbar and warm surfaces.
 
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
@@ -29,7 +29,7 @@ export function HeaderIconButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "relative grid h-8 w-8 place-items-center rounded-lg transition hover:bg-surface-low",
+        "relative grid size-[44px] place-items-center rounded-lg transition-colors duration-150 hover:bg-surface-low focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:size-9",
         active && "bg-surface-low shadow-[inset_0_0_0_1px_var(--border)]",
       )}
       aria-label={label}
@@ -60,9 +60,9 @@ export function HeaderMenuPanel({
   const t = useTranslations("app.menu");
 
   return (
-    <section className="absolute right-0 top-11 z-50 w-80 rounded-xl border border-line bg-surface p-4 text-left text-sm text-foreground shadow-[0_18px_60px_rgba(49,48,48,0.14)]">
+    <section className="absolute top-full right-0 z-50 mt-2 w-[min(320px,calc(100vw-32px))] rounded-xl border border-line bg-surface p-4 text-left text-ui-body text-foreground shadow-lg">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="font-serif text-lg font-semibold">
+        <h2 className="text-ui-label font-semibold">
           {t(menu)}
         </h2>
         <button

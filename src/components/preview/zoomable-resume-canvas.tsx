@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): workspace color around the resume paper.
+
 import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Minus, Move, Plus, RotateCcw } from "lucide-react";
@@ -134,7 +136,7 @@ export function ZoomableResumeCanvas({
     <div
       ref={canvasRef}
       className={cn(
-        "relative h-full min-h-0 touch-none overflow-hidden overscroll-contain bg-[#f8fafc]",
+        "relative h-full min-h-0 touch-none overflow-hidden overscroll-contain bg-surface-low",
         isPanning ? "cursor-grabbing" : "cursor-grab",
         className,
       )}

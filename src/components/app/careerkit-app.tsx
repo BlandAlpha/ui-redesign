@@ -1153,14 +1153,13 @@ export function CareerKitApp({
         }}
       />
 
-      <main className={cn(!isResumeEditor && "lg:ml-72")}>
+      <main id="workspace-main" className={cn("min-w-0", !isResumeEditor && "lg:ml-64")}>
         <div
           className={cn(
             isResumeEditor
-              ? "max-w-none px-0 py-0"
-              : active === "pipeline"
-                ? "px-4 py-8 lg:px-6"
-                : "mx-auto max-w-7xl px-4 py-8 lg:px-10",
+              ? "min-w-0"
+              : "workspace-content",
+            active === "pipeline" && "workspace-content-wide",
           )}
         >
           {active !== "library" && active !== "campus" ? <AppPageHeader

@@ -1,5 +1,7 @@
 ﻿"use client";
 
+// Modified for TRACEFOLIO (2026): workspace toolbar and review surfaces.
+
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
@@ -686,9 +688,9 @@ export function ResumeWorkbench({
   return (
     <TooltipProvider>
       <section className="flex h-screen flex-col overflow-hidden bg-background text-foreground">
-        <header className="flex h-12 shrink-0 items-center gap-3 border-b bg-background px-3">
+        <header className="flex h-12 shrink-0 items-center gap-3 border-b border-line bg-surface px-3">
           <div className="flex min-w-[220px] shrink-0 items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={closeEditor} title={t("toolbar.back")}>
+            <Button variant="ghost" size="icon" onClick={closeEditor} aria-label={t("toolbar.back")} title={t("toolbar.back")}>
               <X />
             </Button>
             <div className="min-w-0">
@@ -697,7 +699,7 @@ export function ResumeWorkbench({
                   value={editingTitle}
                   onChange={(event) => handleTitleChange(event.target.value)}
                   onBlur={handleTitleBlur}
-                  className="h-7 min-w-0 max-w-[220px] rounded-md border border-transparent bg-transparent px-2 text-xs font-semibold outline-none hover:border-line hover:bg-surface focus:border-primary focus:bg-white"
+                  className="h-7 min-w-0 max-w-[220px] rounded-lg border border-transparent bg-transparent px-2 text-ui-meta font-semibold hover:border-line hover:bg-surface-low focus-visible:outline-2 focus-visible:outline-ring"
                   aria-label={t("toolbar.resumeName")}
                   title={t("toolbar.rename")}
                 />
@@ -808,7 +810,7 @@ export function ResumeWorkbench({
               <ResumeTemplateBar resume={activeResume} onTemplateChange={handleTemplateChange} />
               {showImportReviewNotice ? (
                 <div className="border-b border-line bg-surface-low px-4 py-3 md:px-6">
-                  <div className="mx-auto max-w-3xl rounded-lg border border-primary/20 bg-white px-4 py-3 text-base leading-7 text-foreground shadow-sm">
+                  <div className="mx-auto max-w-[720px] rounded-lg border border-line bg-surface px-4 py-3 text-ui-body">
                     {importReviewStatus}
                   </div>
                 </div>

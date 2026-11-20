@@ -1,12 +1,10 @@
 "use client";
 
-// Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
-
-// Modified for TRACEFOLIO (2026): product identity and navigation.
+// Modified for TRACEFOLIO (2026): responsive branded navigation and toolbar.
 
 import type { Dispatch, SetStateAction } from "react";
 import Image from "next/image";
-import { Bell, CircleHelp } from "lucide-react";
+import { Bell, ChevronDown, CircleHelp } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { HeaderIconButton, HeaderMenuPanel, type HeaderMenuKey } from "@/components/app/header-menu";
@@ -45,31 +43,34 @@ export function AppTopbar({
   return (
     <header
       className={cn(
-        "no-print sticky top-0 z-20 border-b border-line bg-surface/85 px-4 py-3 backdrop-blur lg:ml-72 lg:px-8",
+        "no-print sticky top-0 z-20 border-b border-line bg-surface px-4 py-2 sm:px-6 lg:ml-64 lg:px-8",
         hidden && "hidden",
       )}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 lg:hidden">
+      <div className="flex min-h-[44px] items-center justify-between gap-2 lg:justify-end">
+        <div className="flex min-w-0 items-center gap-2 lg:hidden">
           <div className="flex items-center gap-2">
             <Image src="/brand/tracefolio-mark.svg" alt="" width={28} height={28} className="shrink-0" priority />
             <span className="hidden font-sans text-base font-semibold text-foreground sm:inline">{t("brandName")}</span>
           </div>
-          <select
-            data-tour-mobile-nav
-            aria-label={t("navGroups.workflow")} className="max-w-32 rounded-lg border border-line bg-surface px-2 py-2 text-sm"
-            value={active}
-            onChange={(event) => onNavigate(event.target.value as NavKey)}
-          >
-            {navItems.map((item) => (
-              <option key={item.key} value={item.key}>
-                {t(`nav.${item.labelKey}`)}
-              </option>
-            ))}
-          </select>
+          <div className="relative min-w-0">
+            <select
+              data-tour-mobile-nav
+              aria-label={t("navGroups.workflow")}
+              className="h-[44px] max-w-full appearance-none truncate rounded-lg border border-line bg-surface-low py-1 pr-7 pl-2 text-ui-body font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              value={active}
+              onChange={(event) => onNavigate(event.target.value as NavKey)}
+            >
+              {navItems.map((item) => (
+                <option key={item.key} value={item.key}>
+                  {t(`nav.${item.labelKey}`)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown aria-hidden className="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          </div>
         </div>
-        <div className="hidden h-10 w-72 lg:block" aria-hidden />
-        <div className="relative flex items-center gap-2 text-foreground">
+        <div className="relative flex shrink-0 items-center gap-1 text-foreground sm:gap-2">
           <LanguageSwitcher compact />
           <div className="hidden sm:block">
             <HeaderIconButton label={t("topbar.guide")} active={false} onClick={onStartTour}>
@@ -83,7 +84,7 @@ export function AppTopbar({
           >
             <Bell className="h-5 w-5" />
             {followUpReminders.length > 0 && (
-              <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-red-600" />
+              <span aria-hidden className="absolute top-2 right-2 size-1.5 rounded-full bg-destructive" />
             )}
           </HeaderIconButton>
           <a
@@ -102,7 +103,7 @@ export function AppTopbar({
             type="button"
             onClick={() => setHeaderMenu((current) => (current === "profile" ? null : "profile"))}
             className={cn(
-              "grid h-8 w-8 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground transition hover:bg-brand-hover",
+              "grid size-[44px] place-items-center rounded-full bg-brand-muted text-ui-meta font-semibold text-brand transition-colors duration-150 hover:bg-surface-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:size-9",
               headerMenu === "profile" && "ring-2 ring-primary/20",
             )}
             aria-label={t("topbar.profile")}

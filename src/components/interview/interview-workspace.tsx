@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): interview workspace typography and surfaces.
+
 // Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -965,12 +967,12 @@ export function PreparationScreen({
         ) : null}
         {editMessage ? <p className="no-print text-right text-sm text-muted-foreground">{editMessage}</p> : null}
         {editing ? <InterviewPreparationEditor value={preparation} onChange={setPreparation} /> : <>
-        <section id="prep-overview" className="scroll-mt-24 overflow-hidden rounded-lg border border-line bg-surface shadow-[0_18px_50px_rgba(49,48,48,0.05)]">
+        <section id="prep-overview" className="scroll-mt-24 overflow-hidden rounded-xl border border-line bg-surface">
           <div className="border-b border-line bg-brand-muted/55 px-5 py-6 lg:px-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
               <div>
                 <Badge variant="outline">{t("preparation.badge")}</Badge>
-                <h2 className="mt-3 font-serif text-2xl font-semibold lg:text-3xl">
+                <h2 className="mt-3 text-ui-section font-semibold lg:text-3xl">
                   {preparation.meta.company} · {preparation.meta.title}
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">{t("preparation.basedOn", { resumeName })}</p>
@@ -1173,7 +1175,7 @@ function PreparationSectionHeading({ number, title, description }: { number: str
     <div className="flex items-start gap-3">
       <span className="mt-1 font-mono text-xs font-semibold text-brand">{number}</span>
       <div>
-        <h3 className="font-serif text-xl font-semibold">{title}</h3>
+        <h3 className="text-ui-section font-semibold">{title}</h3>
         {description ? <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p> : null}
       </div>
     </div>
@@ -1231,7 +1233,7 @@ function SessionScreen({
   const index = session.currentQuestionIndex;
   const value = draftAnswers[activeQuestion.id] ?? session.answers[activeQuestion.id]?.content ?? "";
   return (
-    <section className="overflow-hidden rounded-lg border border-line bg-surface shadow-[0_18px_50px_rgba(49,48,48,0.05)]">
+    <section className="overflow-hidden rounded-xl border border-line bg-surface">
       <div className="grid min-h-[650px] lg:grid-cols-[260px_minmax(0,1fr)]">
         <aside className="border-b border-line bg-surface-low p-5 lg:border-r lg:border-b-0">
           <div className="flex flex-col gap-1">
@@ -1254,7 +1256,7 @@ function SessionScreen({
                     questionIndex === index ? "border-brand bg-brand-muted text-brand" : "border-line bg-background hover:border-brand/40",
                   )}
                 >
-                  <span className="min-w-0 font-serif text-base leading-6 font-semibold" title={question.prompt}>
+                  <span className="min-w-0 text-ui-label font-semibold" title={question.prompt}>
                     {questionIndex + 1}. {interviewQuestionNavTitle(question)}
                   </span>
                   {answer?.skipped ? <Badge variant="secondary">{t("session.skipped")}</Badge> : answer?.content.trim() ? <CheckCircle2 className="shrink-0 text-brand" /> : null}
@@ -1271,7 +1273,7 @@ function SessionScreen({
           </header>
           <div className="flex flex-1 flex-col gap-5 p-5 lg:p-7">
             <div>
-              <h2 className="max-w-4xl font-serif text-2xl leading-10 font-semibold">{activeQuestion.prompt}</h2>
+              <h2 className="max-w-4xl text-ui-section font-semibold">{activeQuestion.prompt}</h2>
               <div className="mt-4 flex items-start gap-2 rounded-lg bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground">
                 <Target className="mt-1 size-4 shrink-0 text-brand" />
                 <span>{t("session.focus", { focus: activeQuestion.focus })}</span>
@@ -1341,7 +1343,7 @@ export function ReportScreen({
   if (!report) {
     return (
       <section className="rounded-lg border border-line bg-surface p-6">
-        <h2 className="font-serif text-xl font-semibold">{t("report.legacyTitle")}</h2>
+        <h2 className="text-ui-section font-semibold">{t("report.legacyTitle")}</h2>
         <div className="mt-4 flex flex-col gap-3">
           {Object.entries(session.legacyFeedback ?? {}).map(([key, value]) => (
             <div key={key} className="rounded-lg bg-surface-low p-4">
@@ -1361,15 +1363,15 @@ export function ReportScreen({
   ] as const;
   return (
     <div className={cn("flex flex-col gap-5", libraryMode && "gap-6")}>
-      <section className={cn("rounded-lg border border-line bg-surface p-5 shadow-[0_18px_50px_rgba(49,48,48,0.05)] lg:p-6", libraryMode && "p-6 lg:p-8")}>
+      <section className={cn("rounded-xl border border-line bg-surface p-5 lg:p-6", libraryMode && "p-6 lg:p-8")}>
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
             <Badge variant="outline">{t("report.saved")}</Badge>
-            <h2 className={cn("mt-3 font-serif text-2xl font-semibold", libraryMode && "lg:text-3xl")}>{t("report.title", { company: session.context.company, title: session.context.title })}</h2>
+            <h2 className={cn("mt-3 text-ui-section font-semibold", libraryMode && "lg:text-3xl")}>{t("report.title", { company: session.context.company, title: session.context.title })}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{t("report.basedOn", { resumeName: session.context.resumeName })}</p>
           </div>
           <div className="flex items-start gap-3">
-            <div className="flex items-end gap-2"><span className={cn("font-serif text-5xl font-semibold text-brand", libraryMode && "lg:text-6xl")}>{report.overallScore}</span><span className="pb-1 text-sm text-muted-foreground">/ 100</span></div>
+            <div className="flex items-end gap-2"><span className={cn("text-5xl font-semibold tabular-nums text-brand", libraryMode && "lg:text-6xl")}>{report.overallScore}</span><span className="pb-1 text-sm text-muted-foreground">/ 100</span></div>
             {onEdit ? <Button type="button" variant="ghost" size="icon" className="no-print shrink-0 text-muted-foreground hover:text-foreground" onClick={onEdit} aria-label={t("preparation.edit.action")} title={t("preparation.edit.action")}><Pencil className="h-4 w-4" /></Button> : null}
           </div>
         </div>

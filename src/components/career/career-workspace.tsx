@@ -1,9 +1,12 @@
 "use client";
 
+import { Tabs } from "@base-ui/react/tabs";
+
 import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FormEvent,
   type ReactNode,
@@ -21,6 +24,12 @@ import {
   Sparkles,
   Trash2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import {
   buildCareerGrounding,
   canCompleteAction,
@@ -33,15 +42,10 @@ import {
 import type { CareerReview } from "@/lib/career/codex";
 import type { NavKey } from "@/lib/navigation";
 
-type Tab = "overview" | "memory" | "evidence" | "growth";
 type WorkspaceData = CareerState & { codexAvailable: boolean };
 type Save = (url: string, body: unknown, method?: string) => Promise<boolean>;
-const tabs: Array<[Tab, string]> = [
-  ["overview", "能力地图"],
-  ["memory", "职业记忆"],
-  ["evidence", "能力证据"],
-  ["growth", "成长计划"],
-];
+const tabs = ["overview", "memory", "evidence", "growth"] as const;
+type Tab = (typeof tabs)[number];
 const categories = {
   profile: "职业背景",
   goal: "求职目标",
@@ -55,11 +59,9 @@ const sources = {
   interview: "面试记录",
 };
 const fieldClass =
-  "w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/10";
-const buttonClass =
-  "inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50";
-const quietButton =
-  "inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-3 py-2 text-sm transition hover:bg-surface-low disabled:opacity-50";
+  "w-full min-h-[44px] rounded-lg border border-input bg-surface px-3 py-2 text-ui-label focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+const buttonClass = buttonVariants();
+const quietButton = buttonVariants({ variant: "outline" });
 
 async function requestJson(url: string, body?: unknown, method = "GET") {
   const response = await fetch(url, {
@@ -82,6 +84,8 @@ export function CareerWorkspace({
 }: {
   onNavigate: (key: NavKey) => void;
 }) {
+  const t = useTranslations("app");
+  const workspaceT = useTranslations("app.careerWorkspace");
   const [data, setData] = useState<WorkspaceData | null>(null);
   const [tab, setTab] = useState<Tab>("overview");
   const [busy, setBusy] = useState(false);
@@ -228,68 +232,44 @@ export function CareerWorkspace({
   }
 
   return (
-    <div className="space-y-6 pb-16">
-      <section className="relative overflow-hidden rounded-3xl bg-hero p-6 text-hero-foreground lg:p-8">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-10 -top-28 h-80 w-80 rounded-full border-[36px] border-hero-ring"
-        />
-        <div className="relative flex flex-wrap items-start justify-between gap-5">
-          <div className="max-w-xl">
-            <p className="mb-4 flex items-center gap-2 text-xs font-medium tracking-[0.18em] text-hero-detail">
-              <Fingerprint size={16} /> YOUR CAREER, WITH EVIDENCE
-            </p>
-            <h2 className="text-2xl font-semibold leading-snug lg:text-3xl">
-              让每一份能力，都有迹可循。
-            </h2>
-            <p className="mt-3 max-w-lg text-sm leading-7 text-hero-muted">
-              记住你的目标和选择，把做过的事变成能讲清、可追溯的证据。让下一份简历、下一场面试，都建立在真实积累之上。
-            </p>
-            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-hero-muted">
-              <span>01 记住你</span>
-              <span>02 找到证据</span>
-              <span>03 对齐岗位</span>
-              <span>04 持续成长</span>
-            </div>
-          </div>
-          <button
-            className="inline-flex items-center gap-2 rounded-xl border border-hero-border px-4 py-2.5 text-sm hover:bg-primary-soft disabled:opacity-40"
-            disabled={!data}
-            onClick={exportProfile}
-          >
-            <Download size={15} />
-            导出职业档案
-          </button>
+    <Tabs.Root
+      value={tab}
+      onValueChange={(value) => {
+        setTab(value as Tab);
+        setError("");
+        setMessage("");
+      }}
+      className="space-y-5"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-line pb-2">
+        <Tabs.List aria-label={t("nav.intelligence")} className="flex min-w-0 flex-wrap gap-1">
+          {tabs.map((key) => (
+            <Tabs.Tab
+              key={key}
+              value={key}
+              className="min-h-[44px] rounded-lg px-3 text-ui-meta font-medium text-muted-foreground transition-colors duration-150 hover:bg-surface-low hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-active:bg-brand-muted data-active:font-semibold data-active:text-brand motion-reduce:transition-none sm:px-4 sm:text-ui-body"
+            >
+              {workspaceT(key)}
+            </Tabs.Tab>
+          ))}
+        </Tabs.List>
+        <div className="flex flex-wrap items-center gap-2">
+          {tab === "overview" && data?.evidence.length === 0 && (
+            <Button onClick={() => setTab("evidence")}>
+              <Plus aria-hidden />
+              {workspaceT("openEvidence")}
+            </Button>
+          )}
+          <Button variant="ghost" disabled={!data} onClick={exportProfile}>
+            <Download aria-hidden />
+            {workspaceT("export")}
+          </Button>
         </div>
-      </section>
-
-      <div
-        className="flex gap-1 overflow-x-auto border-b border-line"
-        role="tablist"
-        aria-label="职业智能工作区"
-      >
-        {tabs.map(([key, label]) => (
-          <button
-            key={key}
-            role="tab"
-            id={`career-tab-${key}`}
-            aria-controls={`career-panel-${key}`}
-            aria-selected={tab === key}
-            onClick={() => {
-              setTab(key);
-              setError("");
-              setMessage("");
-            }}
-            className={`shrink-0 border-b-2 px-5 py-3 text-sm font-medium ${tab === key ? "border-brand text-brand" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-          >
-            {label}
-          </button>
-        ))}
       </div>
       {error && (
         <div
           role="alert"
-          className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-destructive-soft px-4 py-3 text-ui-body text-destructive"
         >
           {error}
           {!data && (
@@ -309,7 +289,7 @@ export function CareerWorkspace({
       {message && (
         <p
           role="status"
-          className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+          className="rounded-lg bg-success-soft px-4 py-3 text-ui-body text-success"
         >
           {message}
         </p>
@@ -317,15 +297,11 @@ export function CareerWorkspace({
       {!data ? (
         <div className="flex items-center gap-2 py-16 text-sm text-muted-foreground">
           <Loader2 size={18} className="animate-spin" />
-          读取职业档案…
+          {workspaceT("loading")}
         </div>
       ) : (
-        <div
-          id={`career-panel-${tab}`}
-          role="tabpanel"
-          aria-labelledby={`career-tab-${tab}`}
-        >
-          {tab === "overview" && (
+        <>
+          <Tabs.Panel value="overview">
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-3">
                 <Metric
@@ -362,8 +338,9 @@ export function CareerWorkspace({
                   onClick={() => setTab("growth")}
                 />
               </div>
-              <div className="grid items-start gap-5 xl:grid-cols-[1.5fr_1fr]">
+              <div className="workspace-grid items-start">
                 <Panel
+                  className="workspace-span-8"
                   title="对照目标岗位，找到证据与缺口"
                   description="从 JD 中挑选必需技能后填入。首版按你确认的技能标签逐项对照，作品内容仍需复核。"
                 >
@@ -395,7 +372,7 @@ export function CareerWorkspace({
                     className="space-y-3"
                   >
                     <Field label="岗位必需技能（用逗号分隔）">
-                      <textarea
+                      <Textarea
                         required
                         maxLength={2400}
                         className={fieldClass}
@@ -442,7 +419,7 @@ export function CareerWorkspace({
                         >
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <strong className="text-sm">{row.skill}</strong>
-                            <Badge>
+                            <Badge variant={row.support === "artifact" ? "success" : row.support === "self_report" ? "material" : "warning"}>
                               {row.support === "artifact"
                                 ? "有作品 / 面试材料"
                                 : row.support === "self_report"
@@ -514,7 +491,7 @@ export function CareerWorkspace({
                     </div>
                   )}
                 </Panel>
-                <div className="space-y-5">
+                <div className="workspace-span-4 space-y-5">
                   <Panel
                     title="把积累带进下一次机会"
                     description="先沉淀事实，再决定如何表达。"
@@ -625,11 +602,12 @@ export function CareerWorkspace({
                 </Panel>
               )}
             </div>
-          )}
+          </Tabs.Panel>
 
-          {tab === "memory" && (
-            <div className="grid items-start gap-5 xl:grid-cols-2">
+          <Tabs.Panel value="memory" keepMounted>
+            <div className="workspace-grid items-start">
               <Panel
+                className="workspace-span-6"
                 title={editingMemory ? "修正职业记忆" : "新增职业记忆"}
                 description="记录稳定的职业背景、目标、偏好与约束。相同主题请编辑已有记忆，避免冲突。"
               >
@@ -641,7 +619,7 @@ export function CareerWorkspace({
                   done={() => setEditingMemory(undefined)}
                 />
               </Panel>
-              <div className="space-y-3">
+              <div className="workspace-span-6 space-y-3">
                 {data.memories.length === 0 && (
                   <Empty
                     title="从一个真实目标开始"
@@ -651,14 +629,14 @@ export function CareerWorkspace({
                 {data.memories.map((item) => (
                   <article
                     key={item.id}
-                    className="rounded-2xl border border-line bg-surface p-5"
+                    className="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-5"
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge>{categories[item.category]}</Badge>
-                      <Badge>{item.confirmed ? "本人已确认" : "待确认"}</Badge>
+                      <Badge variant="secondary">{categories[item.category]}</Badge>
+                      <Badge variant={item.confirmed ? "success" : "warning"}>{item.confirmed ? "本人已确认" : "待确认"}</Badge>
                       {item.expiresAt &&
                         new Date(item.expiresAt) <= new Date() && (
-                          <Badge>已过期</Badge>
+                          <Badge variant="secondary">已过期</Badge>
                         )}
                     </div>
                     <h3 className="mt-3 font-semibold">{item.key}</h3>
@@ -693,11 +671,12 @@ export function CareerWorkspace({
                 ))}
               </div>
             </div>
-          )}
+          </Tabs.Panel>
 
-          {tab === "evidence" && (
-            <div className="grid items-start gap-5 xl:grid-cols-2">
+          <Tabs.Panel value="evidence" keepMounted>
+            <div className="workspace-grid items-start">
               <Panel
+                className="workspace-span-6"
                 title={editingEvidence ? "复核能力证据" : "新增能力证据"}
                 description="保留原始材料的摘录、定位和你的个人贡献。提交链接不会自动读取或验证内容。"
               >
@@ -709,7 +688,7 @@ export function CareerWorkspace({
                   done={() => setEditingEvidence(undefined)}
                 />
               </Panel>
-              <div className="space-y-3">
+              <div className="workspace-span-6 space-y-3">
                 {data.evidence.length === 0 && (
                   <Empty
                     title="能力，从做过的事情中找到"
@@ -719,11 +698,11 @@ export function CareerWorkspace({
                 {data.evidence.map((item) => (
                   <article
                     key={item.id}
-                    className="rounded-2xl border border-line bg-surface p-5"
+                    className="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-5"
                   >
                     <div className="flex flex-wrap gap-2">
-                      <Badge>{sources[item.sourceType]}</Badge>
-                      <Badge>
+                      <Badge variant="material">{sources[item.sourceType]}</Badge>
+                      <Badge variant={item.status === "accepted" ? "success" : item.status === "rejected" ? "secondary" : "warning"}>
                         {item.status === "accepted"
                           ? "本人已确认"
                           : item.status === "rejected"
@@ -737,7 +716,7 @@ export function CareerWorkspace({
                     </p>
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {item.skills.map((skill) => (
-                        <Badge key={skill}>{skill}</Badge>
+                        <Badge variant="secondary" key={skill}>{skill}</Badge>
                       ))}
                     </div>
                     <p className="mt-3 break-all text-xs leading-6 text-muted-foreground">
@@ -768,9 +747,9 @@ export function CareerWorkspace({
                 ))}
               </div>
             </div>
-          )}
+          </Tabs.Panel>
 
-          {tab === "growth" && (
+          <Tabs.Panel value="growth">
             <div className="space-y-4">
               <div className="rounded-2xl bg-brand-muted p-5">
                 <h3 className="font-semibold text-brand-foreground">
@@ -793,7 +772,7 @@ export function CareerWorkspace({
                   description={action.evidenceTarget}
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <Badge>
+                    <Badge variant={action.status === "done" ? "success" : "secondary"}>
                       {action.status === "done" ? "已用新证据完成" : "进行中"}
                     </Badge>
                     {action.status === "done" ? (
@@ -867,10 +846,10 @@ export function CareerWorkspace({
                 </Panel>
               ))}
             </div>
-          )}
-        </div>
+          </Tabs.Panel>
+        </>
       )}
-    </div>
+    </Tabs.Root>
   );
 }
 
@@ -878,16 +857,18 @@ function Panel({
   title,
   description,
   children,
+  className,
 }: {
   title: string;
   description?: string;
   children: ReactNode;
+  className?: string;
 }) {
   return (
-    <section className="rounded-2xl border border-line bg-surface p-5 lg:p-6">
-      <h3 className="font-semibold tracking-tight">{title}</h3>
+    <section className={cn("min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-6", className)}>
+      <h3 className="text-ui-section font-semibold">{title}</h3>
       {description && (
-        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+        <p className="mt-1 text-ui-body text-muted-foreground">
           {description}
         </p>
       )}
@@ -911,7 +892,7 @@ function Metric({
   return (
     <button
       onClick={onClick}
-      className="rounded-2xl border border-line bg-surface p-5 text-left transition hover:border-brand/30"
+      className="min-w-0 rounded-xl border border-line bg-surface p-4 text-left transition-colors duration-150 hover:border-brand/40 hover:bg-brand-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:p-5"
     >
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">{label}</span>
@@ -927,16 +908,9 @@ function Metric({
     </button>
   );
 }
-function Badge({ children }: { children: ReactNode }) {
-  return (
-    <span className="inline-flex rounded-md bg-brand-muted px-2 py-1 text-[11px] font-medium text-brand-foreground">
-      {children}
-    </span>
-  );
-}
 function Empty({ title, description }: { title: string; description: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-line px-6 py-10">
+    <div className="rounded-xl border border-dashed border-line bg-surface-low px-5 py-8">
       <Fingerprint size={25} className="mb-4 text-brand" />
       <h3 className="font-medium">{title}</h3>
       <p className="mt-2 max-w-lg text-sm leading-7 text-muted-foreground">
@@ -948,7 +922,7 @@ function Empty({ title, description }: { title: string; description: string }) {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block space-y-2">
-      <span className="text-xs font-medium text-foreground/80">{label}</span>
+      <span className="text-ui-meta font-medium text-foreground">{label}</span>
       {children}
     </label>
   );
@@ -963,12 +937,12 @@ function Checkbox({
   checked?: boolean;
 }) {
   return (
-    <label className="flex items-start gap-2.5 text-xs leading-6 text-muted-foreground">
+    <label className="flex items-start gap-3 text-ui-meta text-muted-foreground">
       <input
         type="checkbox"
         name={name}
         defaultChecked={checked}
-        className="mt-1.5 accent-emerald-800"
+        className="mt-1 size-4 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       />
       {children}
     </label>
@@ -1018,13 +992,12 @@ function MemoryForm({
     <form onSubmit={submit} className="space-y-4">
       <fieldset disabled={busy} className="space-y-4 disabled:opacity-60">
         <Field label="记忆主题">
-          <input
+          <Input
             name="key"
             required
             maxLength={100}
             defaultValue={item?.key}
             placeholder="例如：目标岗位"
-            className={fieldClass}
           />
         </Field>
         <Field label="分类">
@@ -1041,23 +1014,22 @@ function MemoryForm({
           </select>
         </Field>
         <Field label="内容">
-          <textarea
+          <Textarea
             name="content"
             required
             maxLength={4000}
             rows={4}
             defaultValue={item?.content}
             placeholder="用自己的话描述一个稳定、具体的事实或偏好。"
-            className={fieldClass}
+            className="field-sizing-fixed"
           />
         </Field>
         <Field label="来源说明">
-          <input
+          <Input
             name="source"
             required
             maxLength={500}
             defaultValue={item?.source ?? "本人填写"}
-            className={fieldClass}
           />
         </Field>
         <Field label="有效期（可选，按北京时间）">
@@ -1114,6 +1086,12 @@ function EvidenceForm({
   busy: boolean;
   done: () => void;
 }) {
+  const titleRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (item) titleRef.current?.focus();
+  }, [item]);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -1147,13 +1125,14 @@ function EvidenceForm({
     <form onSubmit={submit} className="space-y-4">
       <fieldset disabled={busy} className="space-y-4 disabled:opacity-60">
         <Field label="证据标题">
-          <input
+          <Input
+            ref={titleRef}
             name="title"
+            className="scroll-mt-24"
             required
             maxLength={160}
             defaultValue={item?.title}
             placeholder="例如：知识库检索服务的后端实现"
-            className={fieldClass}
           />
         </Field>
         <Field label="材料类型">
@@ -1170,45 +1149,43 @@ function EvidenceForm({
           </select>
         </Field>
         <Field label="链接或材料定位">
-          <input
+          <Input
             name="sourceRef"
             required
             maxLength={1000}
             defaultValue={item?.sourceRef}
             placeholder="例如：仓库链接、PR #12、方案文档第 3 页"
-            className={fieldClass}
           />
         </Field>
         <Field label="原始材料摘录">
-          <textarea
+          <Textarea
             name="excerpt"
             required
             maxLength={6000}
             rows={4}
             defaultValue={item?.excerpt}
             placeholder="粘贴能够支持这项能力的原文，保留必要上下文。"
-            className={fieldClass}
+            className="field-sizing-fixed"
           />
         </Field>
         <Field label="我具体做了什么">
-          <textarea
+          <Textarea
             name="contribution"
             required
             maxLength={2000}
             rows={3}
             defaultValue={item?.contribution}
             placeholder="说明你负责的部分、做过的取舍和可核查的结果。"
-            className={fieldClass}
+            className="field-sizing-fixed"
           />
         </Field>
         <Field label="这份材料支持的技能（用逗号分隔）">
-          <input
+          <Input
             name="skills"
             required
             maxLength={2400}
             defaultValue={item?.skills.join(", ")}
             placeholder="例如：Python, RAG, FastAPI"
-            className={fieldClass}
           />
         </Field>
         <Field label="复核状态">

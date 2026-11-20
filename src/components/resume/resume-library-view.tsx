@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): resume library typography and paper-toned surfaces.
+
 import type { RefObject } from "react";
 import { ArrowDownUp, Copy, LayoutGrid, List, Plus, Search, Trash2, Upload } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -59,7 +61,7 @@ export function ResumeLibraryView({
       <div className="flex flex-col">
         <header className="flex flex-col gap-5 border-b border-line pb-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="font-serif text-3xl font-semibold tracking-normal">{t("title")}</h1>
+            <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {t("count", { count: cards.length, jobOptimizedCount, generalOptimizedCount })}
             </p>
@@ -208,7 +210,7 @@ function ResumeCard({
         }
       }}
       className={cn(
-        "group cursor-pointer overflow-hidden rounded-xl border border-line bg-surface text-left shadow-[0_12px_40px_rgba(49,48,48,0.04)] transition hover:border-primary/35 hover:shadow-[0_14px_44px_rgba(49,48,48,0.08)] focus:outline-none focus:ring-2 focus:ring-primary/20",
+        "group cursor-pointer overflow-hidden rounded-xl border border-line bg-surface text-left transition hover:border-primary/35 hover:shadow-[0_14px_44px_rgba(49,48,48,0.08)] focus:outline-none focus:ring-2 focus:ring-primary/20",
         viewMode === "list" && "flex items-center",
       )}
     >
@@ -223,7 +225,7 @@ function ResumeCard({
       <div className="min-w-0 flex-1 p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="truncate font-serif text-lg font-semibold">{card.title}</h2>
+            <h2 className="truncate text-ui-label font-semibold">{card.title}</h2>
             <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{card.detail}</p>
           </div>
           <div className="flex shrink-0 items-center gap-2">

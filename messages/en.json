@@ -1,6 +1,15 @@
 {
   "app": {
     "brandName": "TRACEFOLIO",
+    "careerWorkspace": {
+      "overview": "Evidence map",
+      "memory": "Career notes",
+      "evidence": "Capability evidence",
+      "growth": "Growth plan",
+      "openEvidence": "Organize project materials",
+      "export": "Export career records",
+      "loading": "Loading career records…"
+    },
     "language": {
       "label": "Language",
       "zh-CN": "中文",

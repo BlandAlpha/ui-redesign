@@ -1,12 +1,13 @@
 "use client";
 
-// Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
+// Modified for TRACEFOLIO (2026): shared workspace layout and title hierarchy.
 
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import type { NavKey } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function AppPageHeader({
   active,
@@ -30,50 +31,31 @@ export function AppPageHeader({
   return (
     <div
       className={cn(
-        "mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-end",
+        "mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5 lg:mb-8 lg:pb-6",
         active === "resume" && !showResumeHeader && "hidden",
-        active === "pipeline" && "relative items-center text-center lg:block",
       )}
     >
-      <div className={cn(active === "pipeline" && "mx-auto text-center")}>
-        <h1 className="font-serif text-2xl font-semibold tracking-normal lg:text-3xl">{pageTitle}</h1>
-        <p
-          className={cn(
-            "mt-1.5 max-w-3xl text-sm leading-6 text-muted-foreground",
-            active === "pipeline" && "mx-auto max-w-2xl",
-          )}
-        >
+      <div className="min-w-0">
+        <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{pageTitle}</h1>
+        <p className="mt-1 max-w-[720px] text-ui-body text-muted-foreground">
           {pageSubtitle}
         </p>
       </div>
-      <div
-        className={cn(
-          "flex items-center gap-2",
-          active === "pipeline" && "justify-center lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2",
-        )}
-      >
-        {active === "pipeline" ? (
-          <>
-            {isPending || toast ? (
-              <div className="rounded-lg border border-line bg-surface px-4 py-2 text-sm text-muted-foreground">
-                {isPending ? t("processing") : toast}
-              </div>
-            ) : null}
-            <button
-              type="button"
-              onClick={onAddApplication}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0_10px_24px_rgba(49,48,48,0.12)] hover:bg-brand-hover"
-            >
-              <Plus className="h-4 w-4" />
+      {active === "pipeline" || isPending || toast ? (
+        <div className="flex flex-wrap items-center gap-3">
+          {isPending || toast ? (
+            <p role="status" className="text-ui-meta text-muted-foreground">
+              {isPending ? t("processing") : toast}
+            </p>
+          ) : null}
+          {active === "pipeline" ? (
+            <Button type="button" onClick={onAddApplication}>
+              <Plus aria-hidden />
               {t("addApplication")}
-            </button>
-          </>
-        ) : isPending || toast ? (
-          <div className="rounded-lg border border-line bg-surface px-4 py-2 text-sm text-muted-foreground">
-            {isPending ? t("processing") : toast}
-          </div>
-        ) : null}
-      </div>
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

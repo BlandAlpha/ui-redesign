@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): settings surfaces.
+
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -70,7 +72,7 @@ export function SettingsView({
         onAgentAssistantVisibleChange={onAgentAssistantVisibleChange}
         onStatus={onStatus}
       />
-      <section className="rounded-lg border border-line bg-surface p-5 shadow-[0_18px_50px_rgba(49,48,48,0.05)]">
+      <section className="rounded-xl border border-line bg-surface p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-base font-semibold">{t("localDataTitle")}</h3>

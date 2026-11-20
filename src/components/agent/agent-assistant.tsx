@@ -1,6 +1,6 @@
 "use client";
 
-// Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
+// Modified for TRACEFOLIO (2026): shared workspace colors for the Agent panel.
 
 // Modified for TRACEFOLIO (2026): keep the assistant hint inside narrow viewports.
 
@@ -342,7 +342,7 @@ export function AgentAssistant({
             bottom: petPosition.bottom + AGENT_PET_HEIGHT + AGENT_PET_PANEL_GAP,
           }}
           className={cn(
-            "no-print fixed flex flex-col overflow-hidden border border-black/10 bg-background shadow-2xl shadow-black/15",
+            "no-print fixed flex flex-col overflow-hidden border border-line bg-surface shadow-xl",
             maximized
               ? "inset-0 z-50 h-dvh w-screen rounded-none"
               : "z-40 h-[min(640px,calc(100vh-7.75rem))] w-[calc(100vw-2rem)] rounded-2xl sm:w-[420px]",
@@ -356,7 +356,7 @@ export function AgentAssistant({
             onClickCapture={suppressPanelClickAfterDrag}
             style={{ touchAction: maximized ? "auto" : "none" }}
             className={cn(
-              "flex h-14 shrink-0 items-center gap-2 border-b bg-surface-low px-3",
+              "flex h-14 shrink-0 items-center gap-2 border-b border-line bg-surface-low px-3",
               maximized ? "cursor-default" : dragSource === "panel" ? "cursor-grabbing" : "cursor-grab",
             )}
           >
@@ -435,7 +435,7 @@ export function AgentAssistant({
             </Button>
           </header>
 
-          {loadError ? <div className="m-3 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{loadError}</div> : null}
+          {loadError ? <div role="alert" className="m-3 rounded-lg bg-destructive-soft px-3 py-2 text-ui-body text-destructive">{loadError}</div> : null}
           {loading && !activeThread ? (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
               <LoaderCircle className="mr-2 size-4 animate-spin" />
@@ -655,7 +655,7 @@ function AgentConversation({
                   <button
                     key={prompt}
                     type="button"
-                    className="rounded-full border bg-background px-3 py-1.5 text-left text-xs hover:bg-muted"
+                    className="min-h-9 rounded-lg border border-line bg-surface px-3 py-1.5 text-left text-ui-meta hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring pointer-coarse:min-h-[44px]"
                     onClick={() => setInput(prompt)}
                   >
                     {prompt}
@@ -791,7 +791,7 @@ function AgentConversation({
       </ScrollArea>
 
       <div className="shrink-0 border-t bg-background p-3">
-        <div className="flex items-end gap-2 rounded-xl border bg-surface-low p-2 focus-within:border-brand/40 focus-within:ring-2 focus-within:ring-brand/10">
+        <div className="flex items-end gap-2 rounded-xl border border-input bg-surface p-2 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/25">
           <SpeechTextarea
             value={input}
             onValueChange={setInput}

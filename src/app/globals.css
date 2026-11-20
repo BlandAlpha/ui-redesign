@@ -1,4 +1,4 @@
-/* Modified for TRACEFOLIO (2026): self-contained fonts and cool-gray / mist-blue app palette. */
+/* Modified for TRACEFOLIO (2026): local font stack and brand workspace theme. */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -7,53 +7,61 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --surface: #ffffff;
-  --surface-low: #f2f4f8;
-  --surface-mid: #ebeef5;
-  --surface-high: #e2e6ef;
-  --border: #e2e6ef;
-  --muted: #f2f4f8;
-  --primary: #4f63c6;
-  --primary-soft: #e5eaf8;
-  --brand: #4f63c6;
-  --brand-hover: #4153ad;
-  --brand-muted: #edf1fa;
-  --brand-foreground: #4055ae;
-  --hero: #edf1fa;
-  --hero-foreground: #25345b;
-  --hero-muted: #596989;
-  --hero-detail: #4f63a0;
-  --hero-ring: #e1e8f6;
-  --hero-border: #c8d3ea;
-  --background: #f7f8fb;
-  --foreground: #1f2937;
-  --card: #ffffff;
-  --card-foreground: #1f2937;
-  --popover: #ffffff;
-  --popover-foreground: #1f2937;
+  --surface: #fffdf8;
+  --surface-low: #f0eee6;
+  --surface-mid: #eae7de;
+  --surface-high: #dedbd0;
+  --border: #dfdccf;
+  --background: #f7f5ef;
+  --foreground: #262a25;
+  --muted: var(--surface-low);
+  --muted-foreground: #5f655c;
+  --primary: #315d4c;
+  --primary-soft: #e5ede5;
+  --brand: var(--primary);
+  --brand-hover: #264c3d;
+  --brand-muted: var(--primary-soft);
+  --brand-foreground: var(--primary);
+  --hero: var(--primary-soft);
+  --hero-foreground: var(--foreground);
+  --hero-muted: var(--muted-foreground);
+  --hero-detail: var(--brand-foreground);
+  --hero-ring: #d5e3d8;
+  --hero-border: #cad8cd;
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
   --primary-foreground: #ffffff;
-  --secondary: #f2f4f8;
-  --secondary-foreground: #465268;
-  --muted-foreground: #637086;
-  --accent: #e5eaf8;
-  --accent-foreground: #4055ae;
-  --destructive: oklch(0.577 0.245 27.325);
-  --input: #d5dcea;
-  --ring: #4f63c6;
-  --chart-1: #4f63c6;
-  --chart-2: #71809e;
-  --chart-3: #9aaad9;
-  --chart-4: #8796b8;
-  --chart-5: #c1ccec;
-  --radius: 0.625rem;
-  --sidebar: #f2f4f8;
-  --sidebar-foreground: #465268;
-  --sidebar-primary: #4f63c6;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e5eaf8;
-  --sidebar-accent-foreground: #4055ae;
-  --sidebar-border: #e2e6ef;
-  --sidebar-ring: #4f63c6;
+  --secondary: var(--surface-low);
+  --secondary-foreground: var(--foreground);
+  --accent: var(--primary-soft);
+  --accent-foreground: var(--primary);
+  --destructive: #a02f35;
+  --destructive-soft: #fae8e7;
+  --success: #2f654f;
+  --success-soft: #e5efe8;
+  --warning: #7b4e12;
+  --warning-soft: #fff1d9;
+  --suggestion: #594677;
+  --suggestion-soft: #eee8f5;
+  --clay: #93442f;
+  --clay-soft: #f2e4dc;
+  --input: #817e70;
+  --ring: var(--primary);
+  --chart-1: #315d4c;
+  --chart-2: #94634b;
+  --chart-3: #657d6d;
+  --chart-4: #746385;
+  --chart-5: #98703b;
+  --sidebar: var(--surface-low);
+  --sidebar-foreground: var(--muted-foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--primary-soft);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 @theme inline {
@@ -77,7 +85,7 @@
   --color-hero-detail: var(--hero-detail);
   --color-hero-ring: var(--hero-ring);
   --color-hero-border: var(--hero-border);
-  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
   --font-serif: "Noto Serif SC", "Songti SC", "STSong", serif;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -97,6 +105,15 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-suggestion: var(--suggestion);
+  --color-suggestion-soft: var(--suggestion-soft);
+  --color-clay: var(--clay);
+  --color-clay-soft: var(--clay-soft);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -107,13 +124,25 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 24px;
+  --text-ui-meta: 13px;
+  --text-ui-meta--line-height: 20px;
+  --text-ui-body: 15px;
+  --text-ui-body--line-height: 24px;
+  --text-ui-label: 16px;
+  --text-ui-label--line-height: 24px;
+  --text-ui-section: 22px;
+  --text-ui-section--line-height: 32px;
+  --text-ui-title: 26px;
+  --text-ui-title--line-height: 36px;
+  --text-ui-title-wide: 32px;
+  --text-ui-title-wide--line-height: 44px;
 }
 
 html {
@@ -122,8 +151,55 @@ html {
 }
 
 body {
-  font-family: "Geist", "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .workspace-content {
+    --workspace-columns: 4;
+    --workspace-gap: 16px;
+    --workspace-inset: 16px;
+    width: 100%;
+    max-width: 1280px;
+    min-width: 0;
+    margin-inline: auto;
+    padding: 24px var(--workspace-inset) 48px;
+  }
+
+  .workspace-content-wide {
+    max-width: none;
+  }
+
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--workspace-columns, 4), minmax(0, 1fr));
+    gap: var(--workspace-gap, 16px);
+  }
+
+  .workspace-grid > * {
+    min-width: 0;
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 640px) {
+    .workspace-content {
+      --workspace-columns: 8;
+      --workspace-gap: 24px;
+      --workspace-inset: 24px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .workspace-content {
+      --workspace-columns: 12;
+      --workspace-inset: 32px;
+      padding-block-start: 32px;
+    }
+
+    .workspace-grid > .workspace-span-4 { grid-column: span 4; }
+    .workspace-grid > .workspace-span-6 { grid-column: span 6; }
+    .workspace-grid > .workspace-span-8 { grid-column: span 8; }
+  }
 }
 
 html::-webkit-scrollbar,
@@ -132,7 +208,7 @@ body::-webkit-scrollbar {
 }
 
 .resume-library-scroll {
-  scrollbar-color: rgb(99 112 134 / 0.35) rgb(99 112 134 / 0.08);
+  scrollbar-color: var(--input) var(--surface-low);
   scrollbar-width: thin;
 }
 
@@ -141,27 +217,20 @@ body::-webkit-scrollbar {
 }
 
 .resume-library-scroll::-webkit-scrollbar-track {
-  background: rgb(99 112 134 / 0.08);
+  background: var(--surface-low);
   border-radius: 999px;
 }
 
 .resume-library-scroll::-webkit-scrollbar-thumb {
-  background: rgb(99 112 134 / 0.35);
+  background: var(--input);
   background-clip: content-box;
   border: 1px solid transparent;
   border-radius: 999px;
 }
 
 .resume-library-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgb(99 112 134 / 0.48);
+  background: var(--muted-foreground);
   background-clip: content-box;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
 }
 
 .resume-heading {
@@ -262,6 +331,15 @@ select {
   --accent: #293452;
   --accent-foreground: #b5c4ff;
   --destructive: oklch(0.704 0.191 22.216);
+  --destructive-soft: #3b2329;
+  --success: #b5d8bf;
+  --success-soft: #23372e;
+  --warning: #f3d093;
+  --warning-soft: #3c3222;
+  --suggestion: #d9c8f0;
+  --suggestion-soft: #372e46;
+  --clay: #edb7a4;
+  --clay-soft: #412b23;
   --border: #333d50;
   --input: #43506a;
   --ring: #9aaaf4;
@@ -285,7 +363,7 @@ select {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-ui-body text-foreground;
   }
   html {
     @apply font-sans;

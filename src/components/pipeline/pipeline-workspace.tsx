@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): branded records-first layout, colors and dialogs.
+
 // Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
 
 import type { ComponentProps, ComponentType, FormEvent, ReactNode } from "react";
@@ -94,7 +96,7 @@ const pipelineStageOptions = pipelineStatuses.flatMap((status) => {
   ];
 });
 
-const pipelineChartColors = ["#7F9CBF", "#9CB69C", "#C3B1D0", "#D4A8A8", "#C4A484", "#AF6F3B"];
+const pipelineChartColors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--muted-foreground)"];
 
 const emptyFilters = { query: "", company: "", status: "", source: "", days: 0, followUp: "" };
 
@@ -146,8 +148,6 @@ export function PipelineView({
 
   return (
     <div className="space-y-5">
-      <PipelineOverview overview={overview} />
-
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative min-w-48 flex-1">
@@ -164,8 +164,8 @@ export function PipelineView({
           <div className="inline-flex shrink-0 rounded-xl border border-line bg-surface-low p-1">
             {([{ mode: "board", Icon: Columns3 }, { mode: "list", Icon: List }] as const).map(({ mode, Icon }) => (
               <button key={mode} type="button" aria-pressed={view === mode} onClick={() => setView(mode)}
-                className={cn("inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-sm font-medium focus-visible:ring-2 focus-visible:ring-ring",
-                  view === mode ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
+                className={cn("inline-flex min-h-9 items-center gap-1.5 rounded-lg px-3 text-ui-meta font-medium pointer-coarse:min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring",
+                  view === mode ? "bg-brand-muted text-brand" : "text-muted-foreground hover:text-foreground")}>
                 <Icon aria-hidden className="size-4" />{t(`list.${mode}`)}
               </button>
             ))}
@@ -245,6 +245,7 @@ export function PipelineView({
           </DndContext>
         )}
       </div>
+      <PipelineOverview overview={overview} />
       <PipelineEditDialog
         application={editingApplication}
         job={editingJob}
@@ -285,11 +286,11 @@ function PipelineFilter({ label, value, onChange, children }: {
 }
 
 const stagePillClass: Record<ApplicationStatus, string> = {
-  APPLIED: "bg-sky-500/12 text-sky-800 dark:text-sky-300",
-  ASSESSMENT: "bg-amber-500/15 text-amber-900 dark:text-amber-200",
-  INTERVIEW: "bg-violet-500/12 text-violet-800 dark:text-violet-300",
-  OFFER: "bg-emerald-500/12 text-emerald-800 dark:text-emerald-300",
-  REJECTED: "bg-rose-500/12 text-rose-800 dark:text-rose-300",
+  APPLIED: "bg-brand-muted text-brand",
+  ASSESSMENT: "bg-warning-soft text-warning",
+  INTERVIEW: "bg-surface-mid text-foreground",
+  OFFER: "bg-success-soft text-success",
+  REJECTED: "bg-destructive-soft text-destructive",
   ARCHIVED: "bg-surface-mid text-muted-foreground",
 };
 
@@ -348,7 +349,7 @@ function PipelineList({ applications, jobById, ascending, onSort, onEditApplicat
                   </button>
                 </td>
                 <td className="truncate" title={role}>{role}</td>
-                <td><span title={stage} className={cn("block w-fit max-w-full truncate rounded-full px-2 py-0.5 text-xs font-medium", stagePillClass[application.status])}>
+                <td><span title={stage} className={cn("block w-fit max-w-full truncate rounded-md px-2 py-0.5 text-ui-meta font-medium", stagePillClass[application.status])}>
                   {stage}
                 </span></td>
                 <td className="truncate text-muted-foreground" title={source}>{source}</td>
@@ -388,7 +389,7 @@ function PipelineStatusColumn({
       ref={setNodeRef}
       data-pipeline-status={status}
       className={cn(
-        "min-h-56 rounded-xl border bg-surface p-4 shadow-[0_12px_32px_rgba(49,48,48,0.035)] transition-[background-color,border-color,box-shadow] duration-150 ease-out motion-reduce:transition-none",
+        "rounded-xl border bg-surface p-4 lg:min-h-56 transition-[background-color,border-color,box-shadow] duration-150 ease-out motion-reduce:transition-none",
         isOver ? "border-primary/45 bg-primary-soft/25 shadow-[0_14px_36px_rgba(49,48,48,0.055),inset_0_0_0_1px_rgba(49,48,48,0.03)]" : "border-line",
       )}
     >
@@ -444,8 +445,8 @@ function PipelineOverview({ overview }: { overview: ReturnType<typeof buildPipel
   const sourceTotal = sourceData.reduce((sum, item) => sum + item.count, 0);
 
   return (
-    <section className="rounded-xl border border-line bg-surface p-4 shadow-[0_12px_40px_rgba(49,48,48,0.04)]">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="rounded-xl border border-line bg-surface p-4 sm:p-6">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         <PipelineMetric icon={ClipboardList} label={t("overview.metrics.total")} value={overview.total} />
         <PipelineMetric icon={CalendarClock} label={t("overview.metrics.active")} value={overview.active} />
         <PipelineMetric icon={Mic} label={t("overview.metrics.interviewRate")} value={`${overview.interviewRate}%`} />
@@ -600,12 +601,12 @@ export function AddApplicationDialog({
       <section
         aria-labelledby="pipeline-add-title"
         aria-modal="true"
-        className="max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-line bg-surface p-5 shadow-[0_24px_80px_rgba(49,48,48,0.18)]"
+        className="max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-line bg-surface p-5 shadow-lg"
         role="dialog"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <h2 id="pipeline-add-title" className="font-serif text-xl font-semibold">
+            <h2 id="pipeline-add-title" className="text-ui-section font-semibold">
               {t("add.title")}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -932,12 +933,12 @@ function PipelineEditDialogContent({
       <section
         aria-labelledby="pipeline-edit-title"
         aria-modal="true"
-        className="max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-line bg-surface p-5 shadow-[0_24px_80px_rgba(49,48,48,0.18)]"
+        className="max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-line bg-surface p-5 shadow-lg"
         role="dialog"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <h2 id="pipeline-edit-title" className="font-serif text-xl font-semibold">
+            <h2 id="pipeline-edit-title" className="text-ui-section font-semibold">
               {t("edit.title")}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">

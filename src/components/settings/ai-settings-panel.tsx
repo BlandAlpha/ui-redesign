@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): shared settings card.
+
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { KeyRound, PlugZap, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -216,7 +218,7 @@ export function AiSettingsPanel({
   }
 
   return (
-    <Card className="max-w-6xl rounded-lg">
+    <Card>
       <CardContent className="flex flex-col gap-5 px-4 py-4 sm:px-5">
         <section className="flex flex-col gap-4">
           <div>

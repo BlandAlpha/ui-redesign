@@ -1,6 +1,15 @@
 {
   "app": {
     "brandName": "TRACEFOLIO",
+    "careerWorkspace": {
+      "overview": "能力地图",
+      "memory": "职业记忆",
+      "evidence": "能力证据",
+      "growth": "成长计划",
+      "openEvidence": "整理项目材料",
+      "export": "导出职业档案",
+      "loading": "正在读取职业档案…"
+    },
     "language": {
       "label": "语言",
       "zh-CN": "中文",

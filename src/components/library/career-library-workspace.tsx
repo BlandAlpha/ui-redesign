@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): library detail typography and surfaces.
+
 // Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
 
 import { useEffect, useMemo, useState } from "react";
@@ -119,7 +121,7 @@ export function CareerLibraryWorkspace({
           </button>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="truncate font-serif text-lg font-semibold text-foreground sm:text-xl">{title}</h1>
+              <h1 className="truncate text-ui-label font-semibold text-foreground sm:text-ui-section">{title}</h1>
               {directArtifact ? <Badge variant="secondary">{t(`kinds.${directArtifact.kind}`)}</Badge> : null}
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">{t("updatedAt", { date: formatDate(updatedAt) })}</p>
@@ -585,7 +587,7 @@ function JobOverview({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-line bg-surface p-5 shadow-sm sm:p-6">
+      <section className="rounded-xl border border-line bg-surface p-5 sm:p-6">
         <header>
           <h3 className="text-base font-semibold text-foreground">{t("overviewCompositionTitle")}</h3>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">{t("overviewCompositionDescription")}</p>
@@ -619,7 +621,7 @@ function JobOverview({
               </PieChart>
             </ResponsiveContainer>
             <div className="pointer-events-none absolute inset-0 grid place-content-center text-center">
-              <strong className="font-serif text-4xl font-normal tabular-nums text-foreground">{chartTotal}</strong>
+              <strong className="text-4xl font-semibold tabular-nums text-foreground">{chartTotal}</strong>
               <span className="mt-1 text-xs text-muted-foreground">{t("overviewCompositionTitle")}</span>
             </div>
           </div>
@@ -968,13 +970,13 @@ function EditIconButton({ label, onClick, className }: { label: string; onClick:
 }
 
 function ContentPage({ title, description, actions, children }: { title: string; description?: string; actions?: React.ReactNode; children: React.ReactNode }) {
-  return <article><header className="flex items-start justify-between gap-4 border-b border-line pb-6"><div className="min-w-0"><h2 className="font-serif text-3xl font-semibold text-foreground">{title}</h2>{description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p> : null}</div>{actions}</header><div className="mt-7 space-y-7">{children}</div></article>;
+  return <article><header className="flex items-start justify-between gap-4 border-b border-line pb-6"><div className="min-w-0"><h2 className="text-ui-section font-semibold text-foreground">{title}</h2>{description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p> : null}</div>{actions}</header><div className="mt-7 space-y-7">{children}</div></article>;
 }
 function ContentSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return <section className="rounded-2xl border border-line bg-surface p-5 shadow-sm"><h3 className="mb-3 text-base font-semibold text-foreground">{title}</h3><div className="text-sm leading-7 text-foreground/85">{children}</div></section>;
+  return <section className="rounded-xl border border-line bg-surface p-5"><h3 className="mb-3 text-base font-semibold text-foreground">{title}</h3><div className="text-sm leading-7 text-foreground/85">{children}</div></section>;
 }
 function MetricCard({ value, label }: { value: number; label: string }) {
-  return <div className="rounded-2xl border border-line bg-surface p-5 shadow-sm"><p className="font-serif text-3xl font-semibold text-foreground">{value}</p><p className="mt-1 text-xs text-muted-foreground">{label}</p></div>;
+  return <div className="rounded-xl border border-line bg-surface p-5"><p className="text-ui-section font-semibold text-foreground">{value}</p><p className="mt-1 text-xs text-muted-foreground">{label}</p></div>;
 }
 function TextPage({ title, text, preserve = false }: { title: string; text: string; preserve?: boolean }) {
   return <ContentPage title={title}><div className={cn("rounded-2xl border border-line bg-surface p-6 text-sm leading-7", preserve && "whitespace-pre-wrap")}>{text}</div></ContentPage>;

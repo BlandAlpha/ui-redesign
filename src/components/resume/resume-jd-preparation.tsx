@@ -1,5 +1,7 @@
 "use client";
 
+// Modified for TRACEFOLIO (2026): shared preparation form typography and surfaces.
+
 import type { ComponentProps, ComponentType, ReactNode } from "react";
 import { Settings, Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -69,7 +71,7 @@ export function ResumeJdPreparation({
   }
 
   return (
-    <section className="rounded-lg border border-line bg-surface shadow-[0_18px_50px_rgba(49,48,48,0.05)]">
+    <section className="rounded-xl border border-line bg-surface">
       <div className="grid xl:grid-cols-[320px_minmax(0,1fr)]">
         <ResumeSourcePicker
           {...resumePicker}
@@ -80,10 +82,10 @@ export function ResumeJdPreparation({
           <div className="shrink-0 p-5 lg:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div>
-                <h2 className="font-serif text-xl font-semibold">{title}</h2>
+                <h2 className="text-ui-section font-semibold">{title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{description}</p>
               </div>
-              <label className="inline-flex cursor-pointer items-center gap-2 self-start rounded-lg border border-line bg-white px-3 py-2 text-xs font-medium text-foreground hover:bg-surface-low">
+              <label className="inline-flex cursor-pointer items-center gap-2 self-start rounded-lg border border-line bg-surface px-3 py-2 text-xs font-medium text-foreground hover:bg-surface-low">
                 <Upload className="h-4 w-4" />
                 {t("uploadJd")}
                 <input
@@ -204,7 +206,7 @@ export function PreparationOptionCard({
       onClick={onChange}
       className={cn(
         "flex min-h-24 w-full items-center justify-between gap-4 rounded-lg border px-4 py-4 text-left transition",
-        checked ? "border-primary/30 bg-primary-soft/35" : "border-line bg-white hover:bg-surface-low",
+        checked ? "border-primary/30 bg-primary-soft/35" : "border-line bg-surface hover:bg-surface-low",
       )}
     >
       <span className="flex min-w-0 items-center gap-3">

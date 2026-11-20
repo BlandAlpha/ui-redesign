@@ -2,6 +2,8 @@
 
 用于执行和评审 Web 重构任务。当前重构工作分支为 `ui-redesign`。根目录 [AGENTS.md](../../AGENTS.md) 中的项目约束适用于每次改动。
 
+界面走查记录和后续验收条件见 [UX 修复清单](UX_BACKLOG.md)。
+
 ## 开工前
 
 1. 查看当前分支、工作区和已暂存文件，识别现有改动。重构完成后，从 fork 的 `ui-redesign` 向原仓库 `main` 提 PR。
