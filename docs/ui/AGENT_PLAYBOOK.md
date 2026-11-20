@@ -2,6 +2,8 @@
 
 用于执行和评审 Web 重构任务。当前重构工作分支为 `ui-redesign`。根目录 [AGENTS.md](../../AGENTS.md) 中的项目约束适用于每次改动。
 
+可用项目 Skill [`$tracefolio-web-ui`](../../.agents/skills/tracefolio-web-ui/SKILL.md) 快速载入现行设计规则和各专题入口。
+
 界面走查记录和后续验收条件见 [UX 修复清单](UX_BACKLOG.md)。
 
 改动卡片时按 [卡片设计规范](CARDS.md) 核对同组对齐、缺失字段和操作入口。

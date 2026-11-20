@@ -97,7 +97,8 @@ GitHub PAT 只用于代码仓库访问，不能当作模型密钥。适配器固
 - [架构、数据模型与 Codex 集成](docs/ARCHITECTURE.md)
 - [开发与商业验证路线图](docs/ROADMAP.md)
 - [开源来源、许可和修改记录](docs/UPSTREAM.md)
-- Web UI 重构：[视觉与文案规范](docs/ui/VISUAL_GUIDELINES.md) · [前端构建规范](docs/ui/FRONTEND_STANDARDS.md) · [卡片设计规范](docs/ui/CARDS.md) · [开发 Agent 手册](docs/ui/AGENT_PLAYBOOK.md)
+- [Web UI 项目 Skill](.agents/skills/tracefolio-web-ui/SKILL.md) · [视觉与文案规范](docs/ui/VISUAL_GUIDELINES.md) · [前端构建规范](docs/ui/FRONTEND_STANDARDS.md) · [卡片设计规范](docs/ui/CARDS.md) · [开发 Agent 手册](docs/ui/AGENT_PLAYBOOK.md)
+- [UX 修复清单](docs/ui/UX_BACKLOG.md) · [职业智能交互重设计记录](docs/ui/CAREER_INTERACTION_PROPOSAL.md)，待实施
 
 ## 开源致谢
 

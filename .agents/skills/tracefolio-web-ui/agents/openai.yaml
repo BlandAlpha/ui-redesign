@@ -1,0 +1,4 @@
+interface:
+  display_name: "TRACEFOLIO Web UI"
+  short_description: "按品牌、布局、卡片和文案规范设计与验收 TRACEFOLIO 工作台"
+  default_prompt: "使用 $tracefolio-web-ui 按 TRACEFOLIO 的现行规范检查我指定的 Web 页面。"
