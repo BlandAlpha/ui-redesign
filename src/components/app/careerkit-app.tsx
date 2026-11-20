@@ -1126,7 +1126,7 @@ export function CareerKitApp({
           className={cn(
             isResumeEditor
               ? "min-w-0"
-              : "workspace-content",
+              : "workspace-content workspace-stack",
             active === "pipeline" && "workspace-content-wide",
           )}
         >

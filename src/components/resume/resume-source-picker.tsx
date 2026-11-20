@@ -71,22 +71,22 @@ export function ResumeSourcePicker({
   }
 
   return (
-    <section className={cn("min-h-0 min-w-0 p-4 sm:p-6", className)}>
-      <h2 className="mb-3 text-ui-section font-semibold">{title ?? t("title")}</h2>
+    <section className={cn("min-h-0 min-w-0 p-ui-block sm:p-ui-section", className)}>
+      <h2 className="mb-ui-block flex min-h-9 items-center text-ui-section font-semibold">{title ?? t("title")}</h2>
       <Tabs.Root
         value={source}
         onValueChange={(next) => {
           if (next === "library" || next === "upload") onSourceChange(next);
         }}
       >
-        <Tabs.List aria-label={t("title")} className="mb-4 inline-flex max-w-full flex-wrap gap-1 rounded-xl bg-surface-low p-1">
+        <Tabs.List aria-label={t("title")} className="segment-group mb-ui-block">
           {(["library", "upload"] as const).map((key) => {
             const Icon = key === "library" ? FileText : Upload;
             return (
               <Tabs.Tab
                 key={key}
                 value={key}
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-lg px-3 text-ui-meta font-medium text-muted-foreground transition-colors duration-150 hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring data-active:bg-primary data-active:text-primary-foreground motion-reduce:transition-none"
+                className="segment-item px-3"
               >
                 <Icon aria-hidden className="size-4 shrink-0" />
                 {t(key)}

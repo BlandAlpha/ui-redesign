@@ -3,11 +3,20 @@
 // Modified for TRACEFOLIO (2026): shared workspace layout and title hierarchy.
 
 import { Plus } from "lucide-react";
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import type { NavKey } from "@/lib/navigation";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+
+export function WorkspaceHeading({ title, children }: { title: string; children?: ReactNode }) {
+  return (
+    <header data-slot="workspace-heading" className="flex min-h-ui-field flex-wrap items-center justify-between gap-x-ui-block gap-y-ui-control">
+      <h1 className="min-w-0 text-ui-title font-semibold lg:text-ui-title-wide">{title}</h1>
+      {children}
+    </header>
+  );
+}
 
 export function AppPageHeader({
   active,
@@ -25,19 +34,12 @@ export function AppPageHeader({
   onAddApplication: () => void;
 }) {
   const t = useTranslations("app.header");
+  if (active === "resume" && !showResumeHeader) return null;
 
   return (
-    <div
-      className={cn(
-        "mb-5 flex flex-wrap items-center justify-between gap-4 lg:mb-7",
-        active === "resume" && !showResumeHeader && "hidden",
-      )}
-    >
-      <div className="min-w-0">
-        <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{pageTitle}</h1>
-      </div>
+    <WorkspaceHeading title={pageTitle ?? ""}>
       {active === "pipeline" || isPending || toast ? (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-ui-control">
           {isPending || toast ? (
             <p role="status" className="text-ui-meta text-muted-foreground">
               {isPending ? t("processing") : toast}
@@ -51,6 +53,6 @@ export function AppPageHeader({
           ) : null}
         </div>
       ) : null}
-    </div>
+    </WorkspaceHeading>
   );
 }

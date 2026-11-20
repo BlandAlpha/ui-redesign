@@ -21,6 +21,18 @@
       "growthCount": "{count, plural, one {# open growth task} other {# open growth tasks}}",
       "inspectAiMaterials": "View records available to AI",
       "noAiMaterials": "No records are available to AI.",
+      "growthPlan": {
+        "done": "Completed",
+        "open": "In progress",
+        "completedWith": "Completed with {title}",
+        "missingEvidence": "Evidence unavailable",
+        "reopen": "Reopen",
+        "completionEvidence": "Completion evidence",
+        "chooseEvidence": "Select evidence",
+        "complete": "Mark complete",
+        "noEligibleEvidence": "No confirmed project or interview evidence matches this skill.",
+        "addEvidence": "Add evidence"
+      },
       "evidenceStatus": {
         "accepted": "Confirmed by you",
         "pending": "Needs review",

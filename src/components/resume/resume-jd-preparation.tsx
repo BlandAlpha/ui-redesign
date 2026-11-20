@@ -78,53 +78,49 @@ export function ResumeJdPreparation({
         />
 
         <section className="flex min-w-0 flex-col">
-          <div className="shrink-0 px-4 pt-4 sm:px-6 sm:pt-6">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <h2 className="text-ui-section font-semibold">{title}</h2>
-              <Button type="button" variant="outline" className="self-start" onClick={() => jdFileInput.current?.click()}>
-                <Upload aria-hidden />
-                {t("uploadJd")}
-              </Button>
-              <input
-                ref={jdFileInput}
-                type="file"
-                className="hidden"
-                accept=".txt,.md,text/plain,text/markdown"
-                onChange={(event) => {
-                  void importJdFile(event.currentTarget.files?.[0]);
-                  event.currentTarget.value = "";
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-5 p-5 lg:p-6">
-            <label className="block">
-              <span className="text-xs font-medium text-muted-foreground">{jdLabel}</span>
-              <SpeechTextarea
-                required
-                maxLength={8000}
-                value={jdValue}
-                onValueChange={onJdChange}
-                placeholder={jdPlaceholder}
-                wrapperClassName="mt-2"
-                className="resume-library-scroll h-[210px] min-h-[210px] field-sizing-fixed resize-y overflow-y-auto bg-surface-low px-4 py-4 text-sm leading-7"
-              />
-              {jdValue.length >= 7600 ? <span className="mt-1 block text-right text-ui-meta text-muted-foreground">{jdValue.length} / 8000</span> : null}
-            </label>
-
-            <div className="-mx-5 px-5 pt-6 lg:-mx-6 lg:px-6">
-              <div className="mb-4">
-                <h3 className="text-base font-semibold text-foreground">{settingsTitle}</h3>
+          <div className="workspace-stack p-ui-block sm:p-ui-section">
+            <div className="grid gap-ui-block">
+              <div className="flex min-h-9 flex-wrap items-center justify-between gap-ui-control">
+                <h2 className="text-ui-section font-semibold">{title}</h2>
+                <Button type="button" variant="outline" onClick={() => jdFileInput.current?.click()}>
+                  <Upload aria-hidden />
+                  {t("uploadJd")}
+                </Button>
+                <input
+                  ref={jdFileInput}
+                  type="file"
+                  className="hidden"
+                  accept=".txt,.md,text/plain,text/markdown"
+                  onChange={(event) => {
+                    void importJdFile(event.currentTarget.files?.[0]);
+                    event.currentTarget.value = "";
+                  }}
+                />
               </div>
+              <label className="grid min-w-0 gap-ui-control">
+                <span className="text-ui-meta font-medium text-muted-foreground">{jdLabel}</span>
+                <SpeechTextarea
+                  required
+                  maxLength={8000}
+                  value={jdValue}
+                  onValueChange={onJdChange}
+                  placeholder={jdPlaceholder}
+                  className="resume-library-scroll h-[210px] min-h-[210px] field-sizing-fixed resize-y overflow-y-auto bg-surface-low px-4 py-4 text-sm leading-7"
+                />
+                {jdValue.length >= 7600 ? <span className="text-right text-ui-meta text-muted-foreground">{jdValue.length} / 8000</span> : null}
+              </label>
+            </div>
+
+            <div className="grid gap-ui-block">
+              <h3 className="text-ui-label font-semibold text-foreground">{settingsTitle}</h3>
               {settings}
             </div>
           </div>
 
-          <div className="shrink-0 border-t border-line px-5 py-4 lg:px-6">{footer}</div>
+          <div className="shrink-0 border-t border-line p-ui-block sm:px-ui-section">{footer}</div>
         </section>
       </div>
-      {notice ? <div className="border-t border-line px-5 py-4 lg:px-6">{notice}</div> : null}
+      {notice ? <div className="border-t border-line p-ui-block sm:px-ui-section">{notice}</div> : null}
     </section>
   );
 }

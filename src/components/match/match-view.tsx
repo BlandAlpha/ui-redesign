@@ -395,7 +395,7 @@ export function MatchView({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="workspace-stack">
       <WorkflowStepper
         labels={[t("steps.select"), t("steps.optimize"), t("steps.preview")]}
         current={isGenerating ? 1 : 0}

@@ -36,7 +36,6 @@ import {
   ListChecks,
   Mic,
   Plus,
-  Search,
   Trash2,
   Trophy,
   X,
@@ -70,6 +69,7 @@ import {
 } from "@/lib/pipeline";
 import type { ApplicationTimelineItem } from "@/lib/pipeline";
 import type { ApplicationStatus, InterviewRound } from "@/lib/types";
+import { SearchInput } from "@/components/ui/search-input";
 import { cn } from "@/lib/utils";
 import type { ApplicationView, JobView, ResumeVersionView } from "@/components/app/types";
 
@@ -147,25 +147,14 @@ export function PipelineView({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
   return (
-    <div className="space-y-5">
-      <div className="space-y-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative min-w-48 flex-1">
-            <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input type="search" aria-label={t("list.search")} placeholder={t("list.search")} value={filters.query}
-              onChange={(event) => changeFilter("query", event.target.value)}
-              className="h-11 rounded-xl bg-background py-0 pl-10 pr-10 [&::-webkit-search-cancel-button]:hidden"
-            />
-            {filters.query && <button type="button" aria-label={t("list.clearSearch")} onClick={() => changeFilter("query", "")}
-              className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-md text-muted-foreground hover:bg-surface-low focus-visible:ring-2 focus-visible:ring-ring">
-              <X aria-hidden className="size-4" />
-            </button>}
-          </div>
-          <div className="inline-flex shrink-0 rounded-xl border border-line bg-surface-low p-1">
+    <div className="workspace-stack">
+      <div className="space-y-ui-control">
+        <div className="flex flex-wrap items-center gap-ui-control">
+          <SearchInput aria-label={t("list.search")} placeholder={t("list.search")} value={filters.query} onChange={(event) => changeFilter("query", event.target.value)} className="min-w-48 flex-1" clear={filters.query ? { label: t("list.clearSearch"), onClick: () => changeFilter("query", "") } : undefined} />
+          <div className="segment-group shrink-0">
             {([{ mode: "board", Icon: Columns3 }, { mode: "list", Icon: List }] as const).map(({ mode, Icon }) => (
               <button key={mode} type="button" aria-pressed={view === mode} onClick={() => setView(mode)}
-                className={cn("inline-flex min-h-9 items-center gap-1.5 rounded-lg px-3 text-ui-meta font-medium pointer-coarse:min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring",
-                  view === mode ? "bg-brand-muted text-brand" : "text-muted-foreground hover:text-foreground")}>
+                className="segment-item px-3">
                 <Icon aria-hidden className="size-4" />{t(`list.${mode}`)}
               </button>
             ))}
@@ -191,7 +180,7 @@ export function PipelineView({
         </div>
       </div>
 
-      <div data-tour="pipeline-board" className="space-y-2.5">
+      <div data-tour="pipeline-board" className="space-y-ui-block">
         <div className="flex min-h-7 items-center justify-between gap-2">
           <p role="status" className="text-sm tabular-nums text-muted-foreground">{t("list.count", { count: visibleApplications.length })}</p>
           {hasFilters && <button type="button" onClick={() => setFilters(emptyFilters)} className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring">{t("list.clearFilters")}</button>}
@@ -389,8 +378,8 @@ function PipelineStatusColumn({
       ref={setNodeRef}
       data-pipeline-status={status}
       className={cn(
-        "rounded-xl border bg-surface p-4 lg:min-h-56 transition-[background-color,border-color,box-shadow] duration-150 ease-out motion-reduce:transition-none",
-        isOver ? "border-primary/45 bg-primary-soft/25 shadow-[0_14px_36px_rgba(49,48,48,0.055),inset_0_0_0_1px_rgba(49,48,48,0.03)]" : "border-line",
+        "rounded-xl border bg-surface p-4 lg:min-h-56 transition-colors duration-150 ease-out motion-reduce:transition-none",
+        isOver ? "border-primary/45 bg-primary-soft/25" : "border-line",
       )}
     >
       <div className="relative mb-4 flex items-center justify-center px-9 text-center">
@@ -455,7 +444,7 @@ function PipelineOverview({ overview }: { overview: ReturnType<typeof buildPipel
       <div className="mt-4 grid gap-6 2xl:grid-cols-[minmax(0,1.35fr)_minmax(420px,0.65fr)]">
         <div className="min-w-0">
           <div className="relative min-h-[24rem] min-w-0">
-            <p className="absolute left-1/2 top-3 z-10 min-w-20 -translate-x-1/2 rounded-md bg-background/85 px-2 py-1 text-center text-[0.6875rem] font-medium text-muted-foreground shadow-[0_4px_14px_rgba(49,48,48,0.04)]">
+            <p className="absolute left-1/2 top-3 z-10 min-w-20 -translate-x-1/2 rounded-md bg-background/85 px-2 py-1 text-center text-[0.6875rem] font-medium text-muted-foreground">
               {t("overview.statusChart")}
             </p>
             <ResponsiveContainer width="100%" height={392} minWidth={160}>
@@ -511,7 +500,7 @@ function PipelineOverview({ overview }: { overview: ReturnType<typeof buildPipel
         <div className="min-w-0">
           {sourceChartData.length > 0 ? (
             <div className="relative min-h-[20rem] min-w-0">
-              <p className="absolute left-1/2 top-3 z-10 min-w-20 -translate-x-1/2 rounded-md bg-background/85 px-2 py-1 text-center text-[0.6875rem] font-medium text-muted-foreground shadow-[0_4px_14px_rgba(49,48,48,0.04)]">
+              <p className="absolute left-1/2 top-3 z-10 min-w-20 -translate-x-1/2 rounded-md bg-background/85 px-2 py-1 text-center text-[0.6875rem] font-medium text-muted-foreground">
                 {t("overview.sourceChart")}
               </p>
               <ResponsiveContainer width="100%" height={328} minWidth={160}>
@@ -550,7 +539,7 @@ function PipelineOverview({ overview }: { overview: ReturnType<typeof buildPipel
             </div>
           ) : (
             <div className="relative grid min-h-[22rem] place-items-center rounded-lg bg-surface-low text-sm text-muted-foreground">
-              <p className="absolute left-1/2 top-3 min-w-20 -translate-x-1/2 rounded-md bg-background/85 px-2 py-1 text-center text-[0.6875rem] font-medium text-muted-foreground shadow-[0_4px_14px_rgba(49,48,48,0.04)]">
+              <p className="absolute left-1/2 top-3 min-w-20 -translate-x-1/2 rounded-md bg-background/85 px-2 py-1 text-center text-[0.6875rem] font-medium text-muted-foreground">
                 {t("overview.sourceChart")}
               </p>
               {t("overview.noSourceData")}
@@ -786,8 +775,8 @@ function PipelineApplicationCard({
         zIndex: isDragging ? 30 : undefined,
       }}
       className={cn(
-        "relative touch-none cursor-grab select-none rounded-lg border border-line bg-background p-3 shadow-[0_8px_20px_rgba(49,48,48,0.03)] outline-none transition-[border-color,box-shadow,opacity] duration-150 ease-out hover:border-brand/40 hover:shadow-[0_10px_24px_rgba(49,48,48,0.06)] active:cursor-grabbing motion-reduce:transition-none",
-        isDragging && "border-primary/35 opacity-95 shadow-[0_20px_48px_rgba(49,48,48,0.16)]",
+        "relative touch-none cursor-grab select-none rounded-lg border border-line bg-background p-3 outline-none transition-[border-color,opacity] duration-150 ease-out hover:border-brand/40 active:cursor-grabbing motion-reduce:transition-none",
+        isDragging && "border-primary/35 opacity-95",
         isAnyDragging && !isDragging && "opacity-70",
       )}
     >
@@ -1224,8 +1213,8 @@ function formatTimelineDate(item: ApplicationTimelineItem, t: PipelineT) {
 }
 
 function timelineMarkerClass(item: ApplicationTimelineItem) {
-  if (item.tone === "win") return "border-[#e3a600] bg-[#f6c343] text-[#3a2a00] shadow-[0_0_0_3px_rgba(246,195,67,0.24)]";
-  if (item.tone === "current") return "border-amber-300 bg-amber-50 text-amber-700 shadow-[0_0_0_3px_rgba(217,119,6,0.10)]";
+  if (item.tone === "win") return "border-[#e3a600] bg-[#f6c343] text-[#3a2a00]";
+  if (item.tone === "current") return "border-amber-300 bg-amber-50 text-amber-700";
   if (item.tone === "terminal") {
     return item.status === "REJECTED"
       ? "border-red-200 bg-red-50 text-red-700"

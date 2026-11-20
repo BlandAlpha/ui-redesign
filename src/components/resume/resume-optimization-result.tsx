@@ -136,7 +136,7 @@ export function ResumeOptimizationResult({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="workspace-stack">
       {showWorkflow ? (
         <WorkflowStepper
           labels={workflowLabels}
@@ -144,7 +144,7 @@ export function ResumeOptimizationResult({
           onStepChange={onStepChange}
         />
       ) : null}
-      <section className="rounded-lg border border-line bg-surface p-5 shadow-[0_18px_50px_rgba(49,48,48,0.05)] lg:p-6">
+      <section className="rounded-lg border border-line bg-surface p-5 lg:p-6">
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
             <p className="text-sm font-medium text-primary">{t("summaryTitle")}</p>
@@ -278,7 +278,7 @@ function ResumeChangeReview({
     return Array.from(groups.entries());
   }, [changes]);
   return (
-    <section className="rounded-lg border border-line bg-surface p-5 shadow-[0_18px_50px_rgba(49,48,48,0.04)] lg:p-6">
+    <section className="rounded-lg border border-line bg-surface p-5 lg:p-6">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
           <h2 className="font-serif text-xl font-semibold">{t("title")}</h2>
@@ -570,7 +570,7 @@ function ResumeDocumentComparePane({
   }, [changedPreviewTitles, optimized, previewResume]);
 
   return (
-    <section className="flex h-[820px] min-w-0 flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-[0_18px_50px_rgba(49,48,48,0.04)]">
+    <section className="flex h-[820px] min-w-0 flex-col overflow-hidden rounded-lg border border-line bg-surface">
       <div className="relative flex min-h-[76px] items-center justify-center border-b border-line px-14 py-4">
         <div className="min-w-0 text-center">
           <h2 className="font-serif text-xl font-semibold">{title}</h2>

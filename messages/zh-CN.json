@@ -21,6 +21,18 @@
       "growthCount": "{count} 项进行中的成长任务",
       "inspectAiMaterials": "查看可用于 AI 的材料",
       "noAiMaterials": "暂无可用于 AI 的记录。",
+      "growthPlan": {
+        "done": "已完成",
+        "open": "进行中",
+        "completedWith": "完成依据：{title}",
+        "missingEvidence": "证据已不可用",
+        "reopen": "重新打开",
+        "completionEvidence": "完成证据",
+        "chooseEvidence": "选择证据",
+        "complete": "标记完成",
+        "noEligibleEvidence": "暂无已确认且技能匹配的作品或面试证据。",
+        "addEvidence": "添加证据"
+      },
       "evidenceStatus": {
         "accepted": "本人已确认",
         "pending": "待确认",

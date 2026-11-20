@@ -31,6 +31,17 @@ npm run lint
 npm run typecheck
 ```
 
+## UI 演示数据
+
+用虚构记录检查长标题、卡片对齐、待确认和已过期的记忆，以及成长计划的进行中、缺少合格证据和已完成状态。预览也会加载内置的示例简历、岗位、投递和面试资料。
+
+```bash
+node scripts/seed-ui-preview.mjs
+DATABASE_URL="file:$PWD/prisma/ui-preview.db" TRACEFOLIO_CODEX_API_KEY='' npm run dev -- --port 3182
+```
+
+打开 [UI 演示工作台](http://127.0.0.1:3182/intelligence)，切换到「成长计划」。导入和预览共用独立的 `prisma/ui-preview.db`。再次导入会补齐缺少的演示记录，保留已修改的演示记录。
+
 ## 已实现的工作流
 
 | 能力 | 当前实现 |

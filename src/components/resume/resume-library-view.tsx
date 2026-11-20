@@ -3,15 +3,16 @@
 // Modified for TRACEFOLIO (2026): aligned resume record cards.
 
 import type { RefObject } from "react";
-import { ArrowDownUp, Copy, FileText, LayoutGrid, List, Plus, Search, Trash2, Upload } from "lucide-react";
+import { ArrowDownUp, Copy, FileText, LayoutGrid, List, Plus, Trash2, Upload } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
+import { WorkspaceHeading } from "@/components/app/app-page-header";
+import { SearchInput } from "@/components/ui/search-input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RecordCard, RecordCardAction } from "@/components/ui/record-card";
 import type { ResumeLibraryCard, ResumeLibrarySortMode } from "@/lib/resume-library";
 import { RESUME_UPLOAD_ACCEPT } from "@/lib/resume-upload";
-import { cn } from "@/lib/utils";
 
 export type ResumeLibraryViewMode = "grid" | "list";
 
@@ -57,113 +58,95 @@ export function ResumeLibraryView({
   const t = useTranslations("app.resumeLibrary");
 
   return (
-    <section className="text-foreground">
-      <div className="flex flex-col">
-        <header className="flex flex-col gap-5 border-b border-line pb-6 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
-            {status !== savedStatus && <p className="mt-3 text-xs text-muted-foreground">{status}</p>}
-          </div>
+    <section className="workspace-stack">
+      <WorkspaceHeading title={t("title")}>
+        <div className="flex flex-wrap items-center gap-ui-control">
+          {status !== savedStatus && <p role="status" className="text-ui-meta text-muted-foreground">{status}</p>}
+          <input
+            ref={importInputRef}
+            type="file"
+            className="hidden"
+            accept={RESUME_UPLOAD_ACCEPT}
+            onChange={(event) => {
+              onImportFile(event.currentTarget.files?.[0]);
+              event.currentTarget.value = "";
+            }}
+          />
+          <Button
+            variant="outline"
+            onClick={onImportButtonClick}
+            className="gap-2"
+            disabled={isImportingResume}
+          >
+            <Upload className="h-4 w-4" />
+            {isImportingResume ? t("importing") : t("import")}
+          </Button>
+          <Button onClick={onCreateResume} className="gap-2">
+            <Plus className="h-4 w-4" />
+            {t("create")}
+          </Button>
+        </div>
+      </WorkspaceHeading>
 
-          <div className="flex flex-wrap gap-2">
-            <input
-              ref={importInputRef}
-              type="file"
-              className="hidden"
-              accept={RESUME_UPLOAD_ACCEPT}
-              onChange={(event) => {
-                onImportFile(event.currentTarget.files?.[0]);
-                event.currentTarget.value = "";
-              }}
-            />
-            <Button
-              variant="outline"
-              onClick={onImportButtonClick}
-              className="gap-2"
-              disabled={isImportingResume}
+      <div className="flex flex-wrap items-center justify-between gap-ui-control">
+        <SearchInput aria-label={t("search")} placeholder={t("search")} value={search} onChange={(event) => onSearchChange(event.target.value)} className="w-full max-w-md sm:min-w-48 sm:flex-1" />
+
+        <div className="flex items-center gap-2">
+          <label className="flex h-ui-field items-center gap-ui-control rounded-lg border border-input bg-surface px-3 text-ui-meta focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring">
+            <ArrowDownUp className="h-4 w-4 text-muted-foreground" />
+            <select
+              value={sortMode}
+              onChange={(event) => onSortModeChange(event.target.value as ResumeLibrarySortMode)}
+              className="bg-transparent outline-none"
             >
-              <Upload className="h-4 w-4" />
-              {isImportingResume ? t("importing") : t("import")}
-            </Button>
-            <Button onClick={onCreateResume} className="gap-2">
-              <Plus className="h-4 w-4" />
-              {t("create")}
-            </Button>
-          </div>
-        </header>
-
-        <div className="mt-7 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <label className="flex h-11 w-full max-w-md items-center gap-3 rounded-lg border border-line bg-surface px-3 text-sm text-muted-foreground shadow-sm">
-            <Search className="h-4 w-4" />
-            <input
-              value={search}
-              onChange={(event) => onSearchChange(event.target.value)}
-              placeholder={t("search")}
-              className="min-w-0 flex-1 bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
-            />
+              <option value="recent">{t("sortRecent")}</option>
+              <option value="recentOptimized">{t("sortRecentOptimized")}</option>
+            </select>
           </label>
-
-          <div className="flex items-center gap-2">
-            <label className="flex h-10 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm">
-              <ArrowDownUp className="h-4 w-4 text-muted-foreground" />
-              <select
-                value={sortMode}
-                onChange={(event) => onSortModeChange(event.target.value as ResumeLibrarySortMode)}
-                className="bg-transparent outline-none"
-              >
-                <option value="recent">{t("sortRecent")}</option>
-                <option value="recentOptimized">{t("sortRecentOptimized")}</option>
-              </select>
-            </label>
-            <div className="flex h-10 overflow-hidden rounded-lg border border-line bg-surface">
-              <button
-                type="button"
-                onClick={() => onViewModeChange("grid")}
-                className={cn("grid w-10 place-items-center", viewMode === "grid" && "bg-primary text-white")}
-                aria-label={t("gridView")}
-                title={t("gridView")}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => onViewModeChange("list")}
-                className={cn("grid w-10 place-items-center", viewMode === "list" && "bg-primary text-white")}
-                aria-label={t("listView")}
-                title={t("listView")}
-              >
-                <List className="h-4 w-4" />
-              </button>
-            </div>
+          <div className="segment-group">
+            <button
+              type="button"
+              onClick={() => onViewModeChange("grid")}
+              className="segment-item w-9" aria-pressed={viewMode === "grid"}
+              aria-label={t("gridView")}
+              title={t("gridView")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => onViewModeChange("list")}
+              className="segment-item w-9" aria-pressed={viewMode === "list"}
+              aria-label={t("listView")}
+              title={t("listView")}
+            >
+              <List className="h-4 w-4" />
+            </button>
           </div>
         </div>
-
-        <div
-          className={cn(
-            "mt-7",
-            viewMode === "grid"
-              ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
-              : "flex flex-col gap-3",
-          )}
-        >
-          {cards.map((card) => (
-            <ResumeCard
-              key={card.id}
-              card={card}
-              onOpen={() => onOpenCard(card)}
-              onCopy={() => onCopyCard(card)}
-              onDelete={() => onDeleteCard(card)}
-              copyDisabled={Boolean(copyingCardId)}
-            />
-          ))}
-        </div>
-
-        {cards.length === 0 && (
-          <div className="mt-12 grid min-h-48 place-items-center rounded-xl border border-dashed border-line text-sm text-muted-foreground">
-            {t("empty")}
-          </div>
-        )}
       </div>
+
+      <div
+        className={viewMode === "grid" ? "grid gap-ui-block sm:grid-cols-2 xl:grid-cols-3" : "flex flex-col gap-ui-block"}
+        hidden={cards.length === 0}
+      >
+        {cards.map((card) => (
+          <ResumeCard
+            key={card.id}
+            card={card}
+            onOpen={() => onOpenCard(card)}
+            onCopy={() => onCopyCard(card)}
+            onDelete={() => onDeleteCard(card)}
+            copyDisabled={Boolean(copyingCardId)}
+          />
+        ))}
+      </div>
+
+      {cards.length === 0 && (
+        <div className="grid min-h-48 place-items-center rounded-xl border border-dashed border-line text-sm text-muted-foreground">
+          {t("empty")}
+        </div>
+      )}
     </section>
   );
 }

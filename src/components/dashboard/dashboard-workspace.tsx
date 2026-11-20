@@ -46,8 +46,8 @@ export function DashboardWorkspace({ summary, onNavigate, onAddApplication }: Da
   const maxStageCount = Math.max(1, ...Object.values(summary.stageCounts));
 
   return (
-    <div className="space-y-5">
-      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="workspace-stack">
+      <section className="grid grid-cols-2 gap-ui-block xl:grid-cols-4">
         <MetricButton icon={BriefcaseBusiness} label={t("metrics.submitted")} value={summary.metrics.submitted} onClick={() => onNavigate("pipeline")} />
         <MetricButton icon={ClipboardList} label={t("metrics.active")} value={summary.metrics.active} onClick={() => onNavigate("pipeline")} />
         <MetricButton icon={CalendarClock} label={t("metrics.followUpsDue")} value={summary.metrics.followUpsDue} onClick={() => onNavigate("pipeline")} />
@@ -170,8 +170,8 @@ function DashboardSection({
   className?: string;
 }) {
   return (
-    <section className={cn("min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-5", className)}>
-      <header className="flex min-h-8 items-center justify-between gap-3 border-b border-line pb-3">
+    <section className={cn("grid min-w-0 grid-cols-1 gap-ui-block rounded-xl border border-line bg-surface p-ui-block sm:p-ui-section", className)}>
+      <header className="flex flex-wrap items-center justify-between gap-ui-control">
         <h2 className="text-ui-section font-semibold">{title}</h2>
         {actionLabel && onAction ? (
           <button type="button" onClick={onAction} className="text-xs font-medium text-primary hover:underline">
@@ -179,7 +179,7 @@ function DashboardSection({
           </button>
         ) : null}
       </header>
-      <div className="pt-1">{children}</div>
+      <div>{children}</div>
     </section>
   );
 }

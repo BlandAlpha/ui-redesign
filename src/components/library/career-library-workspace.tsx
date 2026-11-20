@@ -515,7 +515,7 @@ function JobOverview({
         date: formatDate(archive.updatedAt),
       })}
     >
-      <section className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+      <section className="overflow-hidden rounded-2xl border border-line bg-surface">
         <header className="border-b border-line px-5 py-4 sm:px-6">
           <h3 className="text-base font-semibold text-foreground">{t("overviewPathTitle")}</h3>
         </header>
@@ -564,7 +564,7 @@ function JobOverview({
             {t("categoryCount", { count: archive.artifacts.length })}
           </span>
         </header>
-        <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+        <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
           {archive.artifacts.map((artifact) => (
             <button
               key={artifact.key}
@@ -921,7 +921,7 @@ function InterviewSessionContent({ artifact, nodeId, onSave, onRegenerateReport 
         <div className="space-y-5">
           {session.questions.map((question, index) => {
             const answer = session.answers[question.id];
-            return <section id={`interview-question-${question.id}`} key={question.id} className="relative scroll-mt-24 overflow-hidden rounded-xl border border-line bg-surface shadow-sm">
+            return <section id={`interview-question-${question.id}`} key={question.id} className="relative scroll-mt-24 overflow-hidden rounded-xl border border-line bg-surface">
               <div className={cn("border-b border-line bg-surface-low px-5 py-5 lg:px-7", index === 0 && "pr-16 lg:pr-16")}>
                 <div className="flex items-start gap-3"><span className="font-mono text-xs font-semibold text-brand">{String(index + 1).padStart(2, "0")}</span><div><h3 className="font-semibold leading-6">{question.prompt}</h3><p className="mt-1 text-xs leading-5 text-muted-foreground">{question.focus}</p></div></div>
               </div>
@@ -967,7 +967,7 @@ function EditIconButton({ label, onClick, className }: { label: string; onClick:
 }
 
 function ContentPage({ title, description, actions, children }: { title: string; description?: string; actions?: React.ReactNode; children: React.ReactNode }) {
-  return <article><header className="flex items-start justify-between gap-4 border-b border-line pb-6"><div className="min-w-0"><h2 className="text-ui-section font-semibold text-foreground">{title}</h2>{description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p> : null}</div>{actions}</header><div className="mt-7 space-y-7">{children}</div></article>;
+  return <article className="workspace-stack"><header className="flex flex-wrap items-start justify-between gap-ui-block"><div className="min-w-0"><h2 className="text-ui-section font-semibold text-foreground">{title}</h2>{description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p> : null}</div>{actions}</header><div className="workspace-stack">{children}</div></article>;
 }
 function ContentSection({ title, children }: { title: string; children: React.ReactNode }) {
   return <section className="rounded-xl border border-line bg-surface p-5"><h3 className="mb-3 text-base font-semibold text-foreground">{title}</h3><div className="text-sm leading-7 text-foreground/85">{children}</div></section>;
@@ -992,7 +992,7 @@ function DefinitionGrid({ items }: { items: Array<[string, string]> }) {
 function ResumeDocument({ content }: { content: ResumeContent }) {
   const t = useTranslations("careerLibrary");
   const sections = ["profile", "education", "experiences", "internships", "projects", "skills", "awards", "customSections"];
-  return <div className="mx-auto max-w-3xl rounded-2xl border border-line bg-white p-7 text-slate-900 shadow-sm sm:p-10"><h3 className="font-serif text-3xl font-semibold">{content.basics.name}</h3><p className="mt-1 text-sm text-slate-600">{content.profile.title}</p><div className="mt-7 space-y-7">{sections.map((section) => <ResumeSectionPanel key={section} title={t(`resumeSections.${section}`)} content={content} sectionId={section} />)}</div></div>;
+  return <div className="mx-auto max-w-3xl rounded-2xl border border-line bg-white p-7 text-slate-900 sm:p-10"><h3 className="font-serif text-3xl font-semibold">{content.basics.name}</h3><p className="mt-1 text-sm text-slate-600">{content.profile.title}</p><div className="mt-7 space-y-7">{sections.map((section) => <ResumeSectionPanel key={section} title={t(`resumeSections.${section}`)} content={content} sectionId={section} />)}</div></div>;
 }
 function ResumeSectionPanel({ title, content, sectionId, emphasized = false }: { title: string; content: ResumeContent; sectionId: string; emphasized?: boolean }) {
   const value = resumeSectionLines(content, sectionId);

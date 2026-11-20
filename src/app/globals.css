@@ -143,6 +143,10 @@
   --text-ui-title--line-height: 36px;
   --text-ui-title-wide: 32px;
   --text-ui-title-wide--line-height: 44px;
+  --spacing-ui-section: 24px;
+  --spacing-ui-block: 16px;
+  --spacing-ui-control: 8px;
+  --spacing-ui-field: 44px;
 }
 
 html {
@@ -155,6 +159,55 @@ body {
 }
 
 @layer components {
+  .workspace-stack {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--spacing-ui-section);
+  }
+
+  .segment-group {
+    display: inline-grid;
+    max-width: 100%;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 2px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--surface-low);
+    padding: 3px;
+  }
+
+  .segment-item {
+    display: flex;
+    min-width: 0;
+    min-height: 36px;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-ui-control);
+    border-radius: var(--radius-lg);
+    padding-inline: 8px;
+    color: var(--muted-foreground);
+    font-size: var(--text-ui-meta);
+    font-weight: 500;
+    line-height: var(--text-ui-meta--line-height);
+    text-align: center;
+    transition: background-color 150ms;
+  }
+
+  .segment-item:hover { background: var(--surface); }
+
+  .segment-item:is([data-active], [aria-pressed="true"]) {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .segment-item:focus-visible { outline: 2px solid var(--ring); outline-offset: 1px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .segment-item { transition: none; }
+  }
+
   .workspace-content {
     --workspace-columns: 4;
     --workspace-gap: 16px;

@@ -13,7 +13,6 @@ import {
 } from "react";
 import {
   ArrowRight,
-  Check,
   Download,
   FileCheck2,
   Loader2,
@@ -22,6 +21,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { GrowthPlanCard } from "@/components/career/growth-plan-card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -215,9 +215,9 @@ export function CareerWorkspace() {
         setError("");
         setMessage("");
       }}
-      className="space-y-5"
+      className="workspace-stack"
     >
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-line pb-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-ui-block gap-y-ui-control">
         <Tabs.List aria-label={t("nav.intelligence")} className="flex min-w-0 flex-wrap gap-1">
           {tabs.map((key) => (
             <Tabs.Tab
@@ -282,7 +282,7 @@ export function CareerWorkspace() {
             />
           </Tabs.Panel>
 
-          <Tabs.Panel value="map" className="max-w-[720px] space-y-5">
+          <Tabs.Panel value="map" className="max-w-[720px] space-y-ui-section">
               <Panel title={workspaceT("compareRole")}>
                   <form
                     onSubmit={(event) => {
@@ -471,15 +471,15 @@ export function CareerWorkspace() {
                       </div>
                     ))}
                   </div>
-                  <h4 className="mt-5 text-sm font-semibold">
+                  <h3 className="mt-ui-block text-ui-label font-semibold">
                     项目深挖与待澄清问题
-                  </h4>
+                  </h3>
                   <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-6">
                     {review.questions.map((item, index) => (
                       <li key={index}>{item}</li>
                     ))}
                   </ul>
-                  <h4 className="mt-5 text-sm font-semibold">建议下一步</h4>
+                  <h3 className="mt-ui-block text-ui-label font-semibold">建议下一步</h3>
                   <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-6">
                     {review.nextSteps.map((item, index) => (
                       <li key={index}>{item}</li>
@@ -627,92 +627,26 @@ export function CareerWorkspace() {
             </div>
           </Tabs.Panel>
 
-          <Tabs.Panel value="growth">
-            <div className="space-y-4">
+          <Tabs.Panel value="growth" className="max-w-[720px]">
+            <div className="grid gap-ui-block">
               {data.actions.length === 0 && (
                 <Empty title="暂无成长任务">
                   <Button variant="outline" onClick={() => setTab("map")}>{workspaceT("compareRole")}</Button>
                 </Empty>
               )}
               {data.actions.map((action) => (
-                <Panel
+                <GrowthPlanCard
                   key={action.id}
-                  title={action.title}
-                  description={action.evidenceTarget}
-                >
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant={action.status === "done" ? "success" : "secondary"}>
-                      {action.status === "done" ? "已用新证据完成" : "进行中"}
-                    </Badge>
-                    {action.status === "done" ? (
-                      <>
-                        <p className="text-xs text-muted-foreground">
-                          完成依据：
-                          {
-                            data.evidence.find(
-                              (item) => item.id === action.completionEvidenceId,
-                            )?.title
-                          }
-                        </p>
-                        <button
-                          disabled={busy || reviewBusy}
-                          className={quietButton}
-                          onClick={() =>
-                            save(
-                              `/api/career/growth/${action.id}`,
-                              { completionEvidenceId: null },
-                              "PATCH",
-                            )
-                          }
-                        >
-                          重新打开
-                        </button>
-                      </>
-                    ) : (
-                      <form
-                        className="flex flex-wrap gap-2"
-                        onSubmit={(event) => {
-                          event.preventDefault();
-                          const id = new FormData(event.currentTarget).get(
-                            "evidenceId",
-                          );
-                          if (id)
-                            void save(
-                              `/api/career/growth/${action.id}`,
-                              { completionEvidenceId: id },
-                              "PATCH",
-                            );
-                        }}
-                      >
-                        <select
-                          name="evidenceId"
-                          required
-                          aria-label={`为 ${action.skill} 选择完成证据`}
-                          className={fieldClass + " sm:w-64"}
-                          defaultValue=""
-                        >
-                          <option value="" disabled>
-                            选择对应技能的作品 / 面试证据
-                          </option>
-                          {data.evidence
-                            .filter((item) => canCompleteAction(action, item))
-                            .map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.title}
-                              </option>
-                            ))}
-                        </select>
-                        <button
-                          disabled={busy || reviewBusy}
-                          className={buttonClass}
-                        >
-                          <Check size={15} />
-                          关联证据并完成
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                </Panel>
+                  action={action}
+                  candidates={data.evidence.filter((item) => canCompleteAction(action, item))}
+                  completionEvidence={data.evidence.find((item) => item.id === action.completionEvidenceId)}
+                  busy={busy || reviewBusy}
+                  onAddEvidence={() => {
+                    setEditingEvidence(undefined);
+                    setTab("evidence");
+                  }}
+                  onSave={(completionEvidenceId) => save(`/api/career/growth/${action.id}`, { completionEvidenceId }, "PATCH")}
+                />
               ))}
             </div>
           </Tabs.Panel>
@@ -734,14 +668,14 @@ function Panel({
   className?: string;
 }) {
   return (
-    <section className={cn("min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-6", className)}>
-      <h3 className="text-ui-section font-semibold">{title}</h3>
+    <section className={cn("min-w-0 rounded-xl border border-line bg-surface p-ui-block sm:p-ui-section", className)}>
+      <h2 className="text-ui-section font-semibold">{title}</h2>
       {description && (
         <p className="mt-1 text-ui-body text-muted-foreground">
           {description}
         </p>
       )}
-      <div className="mt-5">{children}</div>
+      <div className="mt-ui-block">{children}</div>
     </section>
   );
 }
@@ -774,7 +708,7 @@ function CareerOverview({
   ] as const;
 
   return (
-    <div className="max-w-[960px] space-y-8">
+    <div className="workspace-stack max-w-[960px]">
       <section className="rounded-2xl bg-brand-muted p-6 sm:p-8">
         <p className="mb-2 text-ui-meta font-medium text-brand">{t("nextStep")}</p>
         <h2 className="max-w-[680px] text-ui-title font-semibold [overflow-wrap:anywhere] sm:text-ui-title-wide">{task.title}</h2>

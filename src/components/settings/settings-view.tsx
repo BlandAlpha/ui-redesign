@@ -63,7 +63,7 @@ export function SettingsView({
   }
 
   return (
-    <div className="flex max-w-6xl flex-col gap-4">
+    <div className="workspace-stack max-w-6xl">
       <AiSettingsPanel
         key={settings?.updatedAt ?? "empty-ai-settings"}
         settings={aiSettings}
@@ -72,10 +72,10 @@ export function SettingsView({
         onAgentAssistantVisibleChange={onAgentAssistantVisibleChange}
         onStatus={onStatus}
       />
-      <section className="rounded-xl border border-line bg-surface p-5">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <section className="rounded-xl border border-line bg-surface p-ui-block sm:p-ui-section">
+        <div className="flex flex-col gap-ui-block sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-base font-semibold">{t("localDataTitle")}</h3>
+            <h2 className="text-ui-section font-semibold">{t("localDataTitle")}</h2>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{t("localDataDescription")}</p>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">

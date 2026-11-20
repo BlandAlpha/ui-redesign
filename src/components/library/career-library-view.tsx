@@ -5,9 +5,11 @@
 // Modified for TRACEFOLIO (2026): shared cool-gray / mist-blue application palette.
 
 import { useMemo, useState } from "react";
-import { FolderKanban, FolderOpen, Pencil, Search, Trash2 } from "lucide-react";
+import { FolderKanban, FolderOpen, Pencil, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
+import { WorkspaceHeading } from "@/components/app/app-page-header";
+import { SearchInput } from "@/components/ui/search-input";
 import type { InitialData } from "@/components/app/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,7 +34,6 @@ import {
   type CareerLibraryGroup,
   type CareerJobArchive,
 } from "@/lib/career-library";
-import { cn } from "@/lib/utils";
 
 export function CareerLibraryView({
   data,
@@ -68,42 +69,29 @@ export function CareerLibraryView({
   const hasItems = group === "job" ? visibleArchives.length > 0 : visibleArtifacts.length > 0;
 
   return (
-    <section className="pb-12">
-      <div className="flex flex-col gap-6 border-b border-line pb-7 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
-        </div>
-        <div className="inline-flex self-start rounded-xl border border-line bg-surface-low p-1">
+    <section className="workspace-stack">
+      <WorkspaceHeading title={t("title")}>
+        <div className="segment-group">
           {(["job", "type"] as const).map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => onGroupChange(item)}
-              className={cn(
-                "rounded-lg px-5 py-2 text-sm font-medium transition",
-                group === item ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
+            <button key={item} type="button" aria-pressed={group === item} onClick={() => onGroupChange(item)} className="segment-item px-3">
               {t(`groups.${item}`)}
             </button>
           ))}
         </div>
-      </div>
+      </WorkspaceHeading>
 
-      <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <label className="relative block w-full max-w-xl">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={t(group === "job" ? "searchJobs" : "searchArtifacts")}
-            className="h-12 w-full rounded-xl border border-line bg-surface pl-12 pr-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
-          />
-        </label>
+      <div className="flex flex-wrap items-center justify-between gap-ui-control">
+        <SearchInput
+          aria-label={t(group === "job" ? "searchJobs" : "searchArtifacts")}
+          placeholder={t(group === "job" ? "searchJobs" : "searchArtifacts")}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          className="w-full max-w-xl sm:min-w-48 sm:flex-1"
+        />
         <select
           value={sortOrder}
           onChange={(event) => setSortOrder(event.target.value as "recent" | "oldest")}
-          className="h-12 rounded-xl border border-line bg-surface px-4 text-sm text-foreground outline-none focus:border-primary/40"
+          className="h-ui-field rounded-lg border border-input bg-surface px-3 text-ui-meta text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           aria-label={t("sortLabel")}
         >
           <option value="recent">{t("sortRecent")}</option>
@@ -112,7 +100,7 @@ export function CareerLibraryView({
       </div>
 
       {!hasItems ? (
-        <div className="mt-12 grid min-h-72 place-items-center rounded-2xl border border-dashed border-line bg-surface-low/50 text-center">
+        <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-line bg-surface-low/50 text-center">
           <div className="max-w-sm px-6">
             <FolderOpen className="mx-auto h-11 w-11 text-muted-foreground/60" strokeWidth={1.6} />
             <h2 className="mt-4 text-lg font-semibold text-foreground">{t("emptyTitle")}</h2>
@@ -120,7 +108,7 @@ export function CareerLibraryView({
           </div>
         </div>
       ) : group === "job" ? (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-ui-block sm:grid-cols-2 xl:grid-cols-3">
           {visibleArchives.map((archive) => {
             const jobId = archive.jobId;
             return (
@@ -140,16 +128,16 @@ export function CareerLibraryView({
           })}
         </div>
       ) : (
-        <div className="mt-6 space-y-8">
+        <div className="workspace-stack">
           {(["resume", "analysis", "interview"] as CareerArtifactCategory[]).map((category) => {
             const items = visibleArtifacts.filter((artifact) => artifact.category === category);
             if (!items.length) return null;
             return (
               <section key={category}>
-                <div className="mb-4 flex items-center gap-3">
+                <div className="mb-ui-block flex items-center gap-ui-control">
                   <h2 className="text-ui-section font-semibold text-foreground">{t(`categories.${category}`)}</h2>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-ui-block sm:grid-cols-2 xl:grid-cols-3">
                   {items.map((artifact) => (
                     <LibraryCard
                       key={artifact.key}

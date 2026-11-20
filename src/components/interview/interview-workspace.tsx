@@ -601,7 +601,7 @@ export function InterviewWorkspace({
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="workspace-stack">
       <WorkflowStepper
         labels={[t("steps.setup"), t("steps.preparation"), t("steps.session"), t("steps.report")]}
         current={{ setup: 0, preparation: 1, session: 2, report: 3 }[screen]}
@@ -1357,7 +1357,7 @@ export function ReportScreen({
     [t("report.dimensions.star"), report.dimensions.star],
   ] as const;
   return (
-    <div className={cn("flex flex-col gap-5", libraryMode && "gap-6")}>
+    <div className="workspace-stack">
       <section className={cn("rounded-xl border border-line bg-surface p-5 lg:p-6", libraryMode && "p-6 lg:p-8")}>
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <div>
@@ -1377,7 +1377,7 @@ export function ReportScreen({
         </div>
       </section>
 
-      <section className="grid gap-5 lg:grid-cols-2">
+      <section className="grid gap-ui-block lg:grid-cols-2">
         <div className={cn("rounded-lg border border-line bg-surface p-5", libraryMode && "lg:p-7")}><h3 className="text-base font-semibold">{t("report.strengths")}</h3><ul className="mt-3 flex flex-col gap-2 text-sm leading-6 text-muted-foreground">{report.strengths.map((item) => <li key={item}>· {item}</li>)}</ul></div>
         <div className={cn("rounded-lg border border-line bg-surface p-5", libraryMode && "lg:p-7")}><h3 className="text-base font-semibold">{t("report.improvements")}</h3><ul className="mt-3 flex flex-col gap-2 text-sm leading-6 text-muted-foreground">{report.improvements.map((item) => <li key={item}>· {item}</li>)}</ul></div>
       </section>

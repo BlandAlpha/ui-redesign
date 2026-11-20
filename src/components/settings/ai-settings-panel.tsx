@@ -216,14 +216,12 @@ export function AiSettingsPanel({
   }
 
   return (
-    <Card>
-      <CardContent className="flex flex-col gap-5 px-4 py-4 sm:px-5">
-        <section className="flex flex-col gap-4">
-          <div>
-            <h3 className="text-base font-semibold">{t("title")}</h3>
-          </div>
+    <Card className="gap-0 pt-0">
+      <CardContent className="workspace-stack p-ui-block sm:p-ui-section">
+        <section className="flex flex-col gap-ui-block">
+          <h2 className="text-ui-section font-semibold">{t("title")}</h2>
 
-          <form id="ai-settings-form" onSubmit={handleSave} className="flex flex-col gap-5">
+          <form id="ai-settings-form" onSubmit={handleSave} className="flex flex-col gap-ui-block">
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Provider" htmlFor="ai-provider">
                 <Select value={providerId} onValueChange={(value) => value && handleProviderChange(value)}>
@@ -338,9 +336,9 @@ export function AiSettingsPanel({
         {status ? <p className="rounded-lg bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground">{status}</p> : null}
 
       </CardContent>
-      <CardFooter className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <CardFooter className="flex flex-col items-stretch gap-ui-control p-ui-block sm:flex-row sm:items-center sm:justify-between sm:px-ui-section">
         <p className="text-ui-meta text-muted-foreground">{t("testStatus")} · {t(`status.${saved.aiLastTestStatus}`)}</p>
-        <div className="flex flex-wrap justify-end gap-3">
+        <div className="flex flex-wrap justify-end gap-ui-control">
           <Button type="button" variant="outline" onClick={() => saveSettings({ clearApiKey: true })} disabled={isSaving || isTesting || !saved.hasApiKey}>
             <Trash2 className="h-4 w-4" />
             {t("deleteKey")}

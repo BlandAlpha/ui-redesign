@@ -5,9 +5,11 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowUpDown, ArrowUpRight, Building2, ChevronDown, ChevronLeft, ChevronRight, LoaderCircle, MapPin, Search, X } from "lucide-react";
+import { ArrowUpDown, ArrowUpRight, Building2, ChevronDown, ChevronLeft, ChevronRight, LoaderCircle, MapPin, X } from "lucide-react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { WorkspaceHeading } from "@/components/app/app-page-header";
+import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogClose, DialogPortal, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -100,20 +102,13 @@ function CampusCatalog({ initialQuery }: { initialQuery: CampusQuery }) {
   const empty = !loading && !failed && data?.total === 0;
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-1 border-b border-line pb-5 lg:pb-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-ui-title font-semibold lg:text-ui-title-wide">{t("title")}</h1>
-        </div>
-        {!loading && !failed && initialQuery.recordId && !data?.selectedRecord && selection === undefined ? <p role="status" className="text-sm text-muted-foreground">{t("recordNotFound")}</p> : null}
-      </header>
+    <section className="workspace-stack">
+      <WorkspaceHeading title={t("title")}>
+        {!loading && !failed && initialQuery.recordId && !data?.selectedRecord && selection === undefined ? <p role="status" className="text-ui-meta text-muted-foreground">{t("recordNotFound")}</p> : null}
+      </WorkspaceHeading>
 
-      <div className="@container space-y-3">
-        <div className="relative">
-          <Search aria-hidden className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
-          <Input aria-label={t("filters.q")} placeholder={t("searchPlaceholder")} maxLength={120} value={filters.q} onChange={(event) => changeFilter("q", event.target.value)} className="h-12 rounded-xl border-line bg-background pl-12 pr-11 shadow-none" />
-          {filters.q ? <Button variant="ghost" size="icon" aria-label={t("clearSearch")} onClick={() => changeFilter("q", "")} className="absolute right-2 top-2"><X aria-hidden /></Button> : null}
-        </div>
+      <div className="@container space-y-ui-control">
+        <SearchInput aria-label={t("filters.q")} placeholder={t("searchPlaceholder")} maxLength={120} value={filters.q} onChange={(event) => changeFilter("q", event.target.value)} clear={filters.q ? { label: t("clearSearch"), onClick: () => changeFilter("q", "") } : undefined} />
         <div className="grid grid-cols-2 gap-2 @min-[30rem]:grid-cols-4 @min-[44rem]:grid-cols-7">
           {filterGroups.map((key) => <Popover key={key}>
             <PopoverTrigger render={<Button variant="outline" className={cn("h-10 w-full min-w-0 justify-between gap-1.5 px-2.5 text-sm", filters[key] && "border-brand/30 bg-brand-muted text-brand")} />}>
@@ -142,7 +137,7 @@ function CampusCatalog({ initialQuery }: { initialQuery: CampusQuery }) {
         </div> : null}
       </div>
 
-      <div className="space-y-3" aria-busy={loading}>
+      <div className="space-y-ui-block" aria-busy={loading}>
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-medium">
           <p role="status" aria-live="polite">{loading ? t("loading") : failed ? t("loadFailed") : t("resultCount", { count: data?.total ?? 0 })}</p>
           <Select value={filters.sort} onValueChange={(value) => { if (value) setFilters((current) => ({ ...current, sort: value as CampusQuery["sort"], page: 1 })); }}>
